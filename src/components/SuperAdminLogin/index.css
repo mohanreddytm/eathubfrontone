@@ -1,0 +1,120 @@
+.super-admin-login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.super-admin-login-main {
+    background-color: var(--header-dark-bc);
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.super-admin-login-main .header-logo-cont{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 24px;
+    
+}
+
+
+.super-admin-login-form-header-main {
+    color: #e5e7eb;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-align: center;
+}
+
+.super-admin-login-form-subtitle {
+    color: #9ca3af;
+    font-size: 14px;
+    text-align: center;
+    margin: 0 0 30px 0;
+}
+
+.super-admin-login-form-group {
+    margin-bottom: 20px;
+}
+
+.super-admin-login-form-group label {
+    display: block;
+    color: #e5e7eb;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* .header-logo-cont-login{
+    display: flex;
+    align-items: center;
+    background-color: green;
+    width: 100%;
+} */
+
+.super-admin-login-form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #4b5563;
+    background-color: #111827;
+    color: #e5e7eb;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.super-admin-login-form-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.super-admin-login-form-button-cont {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.super-admin-login-form-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.super-admin-login-form-button:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.super-admin-login-form-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.super-admin-login-form-footer {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 0;
+    transition: color 0.2s;
+}
+
+.super-admin-login-form-footer:hover {
+    color: #e5e7eb;
+}
+

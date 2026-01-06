@@ -1,0 +1,293 @@
+.dash-header-initial-cont{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    background-color:var(--header-dark-bc);
+    height: max(70px, 10vh);
+    z-index: 10;
+    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0, 0.3);
+}
+
+
+.dash-header-main-c{
+    display: flex;
+    align-items: center;
+    width: 95%;
+    margin: 8px 0px;
+    justify-content: space-between;
+}
+
+.dash-header-main-head{
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--main-head-dark-c);
+}
+
+.dash-h-logo{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.dash-h-left-c{
+    display: flex;
+    align-items: center;
+}
+
+.dash-h-middle-c{
+    background-color: var(--main-dark-bc);
+    border-radius: 6px;
+    padding: 0px 10px;
+}
+
+.dash-h-right-c{
+    display: flex;
+    align-items: center;
+}
+
+.dash-h-btn{
+    background-color: var(--main-theme-c);
+    border: 4px;
+    padding: 8px 16px;
+    border-radius: 2px; 
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.dash-h-btn:hover{
+    background-color: var(--main-theme-hover-c);
+}
+
+.dash-h-profile{
+    background-color: #ffffff;
+    border-radius: 50%;
+    padding: 10px 8px;
+    color: var(--main-theme-c);
+    font-size: 16px;
+}
+
+.dash-h-middle-c button{
+    margin: 8px 10px 8px 10px;
+    border: 2px solid var(--main-theme-c);
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 6px 16px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.dash-h-middle-c button:hover{
+    transform: scale(1.03);
+    /* box-shadow: 0px 0px 10px 0px var(--main-theme-c); */
+}
+
+.dash-h-btn-span{
+    background-color: var(--main-dark-bc);
+    border: 2px solid var(--main-theme-c);
+    padding: 2px 6px;
+    border-radius: 30%;
+    font-size: 14px;
+    font-weight: 600;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    /* border: 2px solid black; */
+}
+
+.dash-h-profile-container{
+    position: relative;
+    cursor: pointer;
+}
+
+.dash-h-profile{
+    background-color: #ffffff;
+    border-radius: 50%;
+    padding: 10px 8px;
+    color: var(--main-theme-c);
+    font-size: 16px;
+    margin: 0;
+    transition: all 0.2s ease;
+}
+
+.dash-h-profile:hover{
+    transform: scale(1.05);
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dash-h-profile-dropdown{
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 1000;
+    overflow: hidden;
+    animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dash-h-dropdown-item{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background-color: transparent;
+    color: #333333;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    gap: 12px;
+}
+
+.dash-h-dropdown-item:hover{
+    background-color: #f5f5f5;
+}
+
+.dash-h-dropdown-item-logout{
+    color: #e74c3c;
+    border-top: 1px solid #e0e0e0;
+}
+
+.dash-h-dropdown-item-logout:hover{
+    background-color: #fee;
+    color: #c0392b;
+}
+
+.dash-h-dropdown-icon{
+    font-size: 16px;
+    color: inherit;
+}
+
+.dash-logout-modal-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.dash-logout-modal{
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 320px;
+    max-width: 90%;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dash-logout-modal-title{
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0 0 12px 0;
+}
+
+.dash-logout-modal-message{
+    font-size: 15px;
+    color: #666666;
+    margin: 0 0 24px 0;
+}
+
+.dash-logout-modal-buttons{
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.dash-logout-modal-btn{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dash-logout-modal-btn-cancel{
+    background-color: #f5f5f5;
+    color: #333333;
+}
+
+.dash-logout-modal-btn-cancel:hover{
+    background-color: #e0e0e0;
+}
+
+.dash-logout-modal-btn-confirm{
+    background-color: #e74c3c;
+    color: var(--text-primary);
+}
+
+.dash-logout-modal-btn-confirm:hover{
+    background-color: #c0392b;
+}
+
+@media screen and (max-width:768px) {
+    .dash-header-initial-cont{
+        position: static !important;
+        margin: 8px 4px 4px 4px;
+        border-radius: 10px;
+        height: auto;
+    }
+
+    .dash-h-profile-dropdown{
+        right: -10px;
+    }
+
+    .dash-logout-modal{
+        min-width: 280px;
+        padding: 20px;
+    }
+}

@@ -1,0 +1,200 @@
+.restaurant-login-container-initial-cont{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    background-color: #111827;
+    justify-content: center;
+}
+
+
+.restaurant-login-container-main{
+    display: flex;
+
+    align-self: center;
+    justify-content: center;
+    
+    min-width: max(33%, 400px);
+    flex-direction: column;
+}
+
+.header-logo-mini-cont{
+    height: 40px;
+    margin-right: 4px;
+    
+}
+
+
+
+.header-logo-cont-login{
+    align-items: center;
+    align-self: center;
+
+    display: flex;
+    justify-content: center;
+    width: 20%;
+    margin-bottom: 30px;
+}
+
+
+.restaurant-login-form{
+    background-color: #1F2937;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+        border-radius: 10px;
+}
+
+.restaurant-login-form-header{
+    color: #f0ebeb;
+    font-size: 14px;
+    font-weight: 500;
+
+    margin-bottom: 10px;
+}
+
+.restaurant-login-form-input{
+    background-color: #111827;
+
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+    outline:none;
+    border-radius: 4px;
+}
+
+.restaurant-login-form-checkbox-cont{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.restaurant-login-form-checkbox-inner-cont{
+    display: flex;
+    align-items: center;
+}
+
+.restaurant-login-form-checkbox-label{
+    color: #f0ebeb;
+    font-size: 14px;
+    margin: 0px;
+    padding: 0px;
+    font-weight: 500;
+}
+
+.restaurant-login-form-checkbox{
+    margin: 8px;
+    width:20px;
+    height: 20px;
+}
+
+.restaurant-login-form-button-cont{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.restaurant-login-form-button-header{
+    color: #f0ebeb;
+    font-size: 16px;
+    font-weight: 500;
+    
+}
+
+.restaurant-login-form-button-header span{
+    color: #A78BFA;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.restaurant-login-form-button-header span:hover{
+    text-decoration: underline;
+}
+
+.restaurant-login-form-button{
+    background-color: #A78BFA;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+}
+
+.restaurant-login-form-button:hover{
+    background-color: #7C3AED;
+}
+
+.restaurant-login-form-footer{
+    color: #f0ebeb;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 20px;
+    text-align: center;
+    text-decoration: underline;
+
+}
+
+.restaurant-login-form-footer:hover{
+    color: #A78BFA;
+    cursor: pointer;
+}
+
+.error-cont-login-style{
+    width: 30%;
+}
+
+.restaurant-login-form-top{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.restaurant-login-form-top h1{
+    color: #f0ebeb;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+
+    
+
+    border-top: none;
+    padding: 2px 8px 8px 8px;
+    border-radius: 0px 0px 10px 10px;
+    transition: all 0.3s ease;
+    /* box-shadow: 0px 2px 3px 0px #7C3AED; */
+}
+
+.restaurant-login-form-top h1:hover{
+    /* scale: 1.03; */
+}
+
+.restaurant-login-form-top-selected{
+    background: linear-gradient(to top, rgb(124, 58, 237, 0.4), var(--header-dark-bc));
+    box-shadow: 0px 2px 3px 0px #7C3AED;
+    border: #7C3AED 2px solid;
+}
+
+@media screen and (max-width:500px) {
+    .restaurant-login-container-main{
+        width: 90%;
+        /* display: none; */
+    }
+    .error-cont-login-style{
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .restaurant-login-container-main{
+        min-width: 98%;
+    }
+}

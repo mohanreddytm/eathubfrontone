@@ -1,0 +1,211 @@
+.customar-menu-items{
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    width: 100%;
+}
+
+.customar-menu-items li{
+    list-style-type: none;
+    display: flex;
+    margin: 10px;
+    background-color: var(--header-dark-bc);
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 10px;
+    flex-direction: column;
+    position: relative;
+    border: 1px solid var(--glass-br-c);
+
+}
+
+.customar-menu-content-top-one{
+    width: 100%;
+    /* background-color: pink; */
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+}
+
+.customar-no-image-cont{
+    background-color: rgb(149, 42, 136, 0.2);
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100px;
+    /* background-color: pink; */
+}
+
+.customar-no-image-cont img{
+    width: 60% !important;
+    height: 80% !important;
+}
+
+.customar-menu-items li img{
+    width: 30%;
+    border-radius: 10px;
+    height: 100px;
+}
+
+.customar-menu-item-name{
+    font-size: 20px;
+    color: #e7e5e5;
+    margin: 0px;
+}
+
+.customar-menu-item-desc{
+    color: #bebcbc;
+    font-size: 14px;
+    margin-top: 10px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.4;
+    max-height: 60px;
+    width: 250px;
+}
+
+.veg-icon-top{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 0px !important;
+}
+
+.customar-menu-content-bottom-one{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 20px 20px; */
+    margin: 14px;
+    /* background-color: pink; */
+}
+
+.price-value{
+    font-size: 20px;
+    color: #e7e5e5;
+    margin: 0px;
+}
+
+.customer-add-item-button{
+    background-color: rgb(33, 136, 56, 0.3);
+    border: 1px solid rgb(33, 136, 56);
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: white;
+}
+
+.preparation-time{
+    background-color: rgb(149, 42, 136, 0.2);
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    color: rgb(223, 220, 220);
+    border: 1px solid rgb(149, 42, 136);
+    gap: 6px;
+    align-self: center;
+    margin: 0px;
+}
+
+.customer-menu-time-cont{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+@media screen and (min-width: 768px) {
+    .customar-menu-items{
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+    .customar-menu-items li{
+        width: 30%;
+    }
+
+    .customar-menu-items li div{
+        /* background-color: pink; */
+        /* width: 100%; */
+    }
+    .customar-menu-items li img{
+        width: 30%;
+    }
+    .preparation-time{
+        font-size: 10px;
+    }
+}
+
+
+.add-sub-items-quantityt{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 6px 10px;
+}
+
+.add-sub-items-quantityt p{
+    /* width: 30px; */
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 20px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.add-sub-items-quantityt svg{
+    width: 12px;
+    /* background-color: pink; */
+}
+
+.loading-cus-cont{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.loading-cus-cont p{
+    font-size: 14px;
+    color: #bebcbc;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.no-food-items-available-cont{
+    width: 100%;
+    margin-top: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e7e5e5;
+}
+
+.no-food-items-available-cont svg{
+    color: rgb(255, 193, 7, 0.5);
+    margin-right: 10px;
+}
+
+.failure-view-menu-items-cus{
+    flex-direction: column;
+}
+
+.failure-view-menu-items-cus button{
+    background-color: rgb(220, 53, 69, 0.2);
+    border: 1px solid rgb(220, 53, 69);
+    color: rgb(220, 53, 69);
+    padding: 6px 10px;
+    font-size: 16px;
+    /* color: white; */
+    border-radius: 4px;
+}

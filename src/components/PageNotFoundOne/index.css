@@ -1,0 +1,58 @@
+.page-not-found-cont{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--main-dark-bc);
+}
+
+.page-not-found-inner-cont{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* gap: 20px; */
+    background-color: var(--header-dark-bc);
+    padding: 30px 50px;
+    border-radius: 10px;
+    box-shadow: var(--glass-sh);
+}
+
+.page-not-found-main-head{
+    color: rgb(234, 233, 233);
+    font-size: 50px;
+    font-weight: 700;
+    margin: 0px;
+}
+
+.page-not-found-main-head span{
+    color: #952a88;
+    margin: 0px 3px;
+}
+
+.page-not-found-sub-head{
+    color: rgb(200, 199, 199);
+    font-size: 18px;
+    font-weight: 600;
+    /* margin: 0px; */
+    text-align: center;
+}
+
+.page-not-found-button{
+    background-color:rgba(149, 42, 136, 0.2);
+    color: #d5d1d5;
+    border: 1px solid #952a88;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    font-weight: 600;
+}
+
+.page-not-found-button:hover{
+    background-color: #952a88;
+    color: rgb(234, 233, 233);
+}

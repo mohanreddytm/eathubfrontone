@@ -1,0 +1,404 @@
+.waiter-request-button{
+    background-color: #111827;
+    color: #d9d5d5;
+    border: 1px solid #111827;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    &:hover{
+        scale: 1.02;
+    }
+}
+
+.waiter-request-main-cont{
+    display: flex;
+
+}
+
+.waiter-request-main-cont-one{
+    flex-grow: 4;
+    padding: 10px;
+
+}
+
+.waiter-request-main-cont-one-head{
+    font-size: 24px;
+    font-weight: 500;
+    color: #d9d5d5;
+}
+
+.waiter-request-main-cont-one-list{
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+}
+
+.waiter-request-main-cont-one-list li{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--header-dark-bc);
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.waiter-request-main-cont-one-list-head{
+    font-size: 24px;
+    font-weight: 500;
+    color: #d9d5d5;
+    margin:8px;   
+    border-left: 4px solid var(--sp-c); 
+    border-radius: 4px;
+    padding: 4px 4px 4px 8px;
+
+}
+
+.waiter-request-main-cont-one-list-inner-cont{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: var(--glass-c);
+    margin: 8px;
+}
+
+.waiter-request-main-cont-one-list-inner-cont p{
+    margin: 0px;
+    color: #bab5b5;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.waiter-request-main-cont-one-list-inner-cont-icon{
+    font-size: 24px;
+    color: #bab5b5;
+    margin-right: 8px;
+}
+
+.waiter-request-main-cont-two{
+    flex-grow: 1;
+    padding: 10px;
+    /* background-color: #010b20; */
+}
+
+.waiter-request-main-cont-two-head{
+    font-size: 24px;
+    font-weight: 500;
+    color: #d9d5d5;
+
+}
+
+.waiter-request-main-cont-two-list{
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    /* margin: 0px; */
+    margin-top: 20px;
+}
+
+.waiter-request-main-cont-two-list li{
+    background-color: #010b20;
+    border-radius: 10px;
+    margin: 0px 0px 19px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-left: 4px solid var(--sp-c);
+    border-radius: 4px;
+}
+
+
+.waiter-request-main-cont-two-list-inner-cont{
+    display: flex;
+    align-items: center;
+    /* background-color: pink; */
+    width: 100%;
+    justify-content: space-between;
+    margin: 0px 0px 16px 0px;
+}
+
+.waiter-request-main-cont-two-list-inner-cont-head{
+    font-size: 24px;
+    font-weight: 500;
+    color: #d9d5d5;
+    margin: 0px;
+}
+
+.waiter-request-main-cont-two-list-inner-cont-p{
+    font-size: 16px;
+    font-weight: 500;
+    color: #bab5b5;
+    margin: 0px;
+}
+
+.waiter-set-free-btn{
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: 1px solid var(--green-c);
+    background-color: rgba(22,163,74,0.15);
+    color: #bbf7d0;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.waiter-set-free-btn:hover{
+    background-color: rgba(22,163,74,0.3);
+}
+
+.waiter-set-free-btn:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.waiter-request-main-cont-two-button{
+    background-color: #111827;
+    color: #d9d5d5;
+    border: 2px solid var(--sp-c);
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.1s ease;
+}
+
+.waiter-request-main-cont-two-button:hover{
+    /* scale: 1.02; */
+    background-color: #1d273e;
+    /* color: var(--sp-c); */
+
+}
+
+.available-p{
+    border-right: 2px solid var(--green-c);
+    border-left: 2px solid var(--green-c);
+    padding: 4px;
+    border-radius: 4px;
+
+}
+
+.serving-p{
+    border-right: 2px solid var(--red-c);
+    border-left: 2px solid var(--red-c);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.cleaning-p{
+    border-right: 2px solid var(--yellow-c);
+    border-left: 2px solid var(--yellow-c);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Loading Styles */
+.waiter-request-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 15px;
+}
+
+.waiter-request-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(149, 42, 136, 0.2);
+    border-top: 4px solid var(--main-theme-c-2);
+    border-radius: 50%;
+    animation: waiter-request-spin 1s linear infinite;
+}
+
+@keyframes waiter-request-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.waiter-request-loading p {
+    color: #bab5b5;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Request Items */
+.waiter-request-main-cont-one-list-requests {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+}
+
+.waiter-request-item {
+    background-color: rgba(149, 42, 136, 0.1);
+    border: 1px solid rgba(149, 42, 136, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.waiter-request-item-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.waiter-request-bell-icon {
+    font-size: 20px;
+    color: var(--main-theme-c-2);
+    animation: waiter-request-bell-pulse 2s ease-in-out infinite;
+}
+
+@keyframes waiter-request-bell-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.waiter-request-table-name {
+    margin: 0;
+    color: #d9d5d5;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Admin call status under waiter */
+.waiter-admin-call-status{
+    font-size: 12px;
+    margin: 4px 0 0 0;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.waiter-admin-call-status-pending{
+    color: #fbbf24;
+    background-color: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.waiter-admin-call-status-coming{
+    color: #4ade80;
+    background-color: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.waiter-admin-call-status-busy{
+    color: #fb7185;
+    background-color: rgba(251, 113, 133, 0.08);
+    border: 1px solid rgba(251, 113, 133, 0.4);
+}
+
+.waiter-request-time {
+    margin: 0;
+    color: #bab5b5;
+    font-size: 14px;
+}
+
+.waiter-request-assigned {
+    margin: 0;
+    color: #4CAF50;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.waiter-request-complete-btn {
+    background-color: rgba(74, 222, 128, 0.2);
+    border: 1px solid #4ade80;
+    color: #4ade80;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+.waiter-request-complete-btn:hover {
+    background-color: rgba(74, 222, 128, 0.3);
+    transform: scale(1.02);
+}
+
+.waiter-request-assign-select {
+    background-color: #111827;
+    color: #d9d5d5;
+    border: 2px solid var(--sp-c);
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+    transition: all 0.1s ease;
+}
+
+.waiter-request-assign-select:hover {
+    background-color: #1d273e;
+}
+
+.waiter-request-assign-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Header Badge */
+.waiter-request-header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+.waiter-request-header-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+    color: var(--text-primary);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 8px;
+    min-width: 24px;
+    height: 24px;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+    animation: waiter-badge-pulse 2s ease-in-out infinite;
+}
+
+/* Responsive for WaiterRequest */
+@media screen and (max-width: 768px) {
+    .waiter-request-main-cont {
+        flex-direction: column;
+    }
+
+    .waiter-request-main-cont-one,
+    .waiter-request-main-cont-two {
+        flex-grow: 1;
+        width: 100%;
+    }
+
+    .waiter-request-header-badge {
+        font-size: 12px;
+        padding: 3px 8px;
+        min-width: 20px;
+        height: 20px;
+    }
+}

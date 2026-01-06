@@ -1,0 +1,20 @@
+.cart-item-logo-cont
+{
+    position: relative;
+
+}
+
+.cart-item-logo-cont p{
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    margin: 0px;
+    font-size: 12px;
+    color: #952a88;
+    background-color: rgb(231, 229, 229);
+    padding: 2px 6px;
+    /* padding: 2px 4px; */
+    border-radius: 50%;
+    font-weight: 600;
+
+}

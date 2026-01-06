@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}
+
+:root {
+  --header-dark-bc: #1F2937;
+  --main-dark-bc: #111827;
+  --main-head-dark-c: #ffffff;
+  --text-color: #bcb6b6;
+  --main-theme-c: #A78BFA;
+  --main-theme-c-2:#952a88;
+  --main-theme-c-2-hover:#6b1962;
+  --main-theme-hover-c:#886be9;
+  --glass-c:rgba(255, 255, 255, 0.1);
+  --glass-br-c:rgba(255, 255, 255, 0.2);
+  --red-c:#dc3545;
+  --green-c:#218838;
+  --btn-c:#4f46e5;
+  --sp-c:#952a88;
+  --yellow-c:#ffc107;
+  --blue-c:#007bff;
+}
+
+/* Dark Theme (Default) */
+[data-theme="dark"] {
+  --header-dark-bc: #1F2937;
+  --main-dark-bc: #111827;
+  --main-head-dark-c: #ffffff;
+  --text-color: #bcb6b6;
+  --glass-c: rgba(255, 255, 255, 0.1);
+  --glass-br-c: rgba(255, 255, 255, 0.2);
+  --bg-primary: #111827;
+  --bg-secondary: #1F2937;
+  --bg-tertiary: #374151;
+  --text-primary: #ffffff;
+  --text-secondary: #bcb6b6;
+  --text-muted: #9CA3AF;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --card-bg: #1F2937;
+  --input-bg: #374151;
+  --input-border: rgba(255, 255, 255, 0.2);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --header-dark-bc: #F3F4F6;
+  --main-dark-bc: #FFFFFF;
+  --main-head-dark-c: #111827;
+  --text-color: #374151;
+  --glass-c: rgba(0, 0, 0, 0.05);
+  --glass-br-c: rgba(0, 0, 0, 0.1);
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F9FAFB;
+  --bg-tertiary: #F3F4F6;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6B7280;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --card-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+  --input-border: rgba(0, 0, 0, 0.2);
+}
+
+/* Auto Theme - follows system preference */
+@media (prefers-color-scheme: light) {
+  [data-theme="auto"] {
+    --header-dark-bc: #F3F4F6;
+    --main-dark-bc: #FFFFFF;
+    --main-head-dark-c: #111827;
+    --text-color: #374151;
+    --glass-c: rgba(0, 0, 0, 0.05);
+    --glass-br-c: rgba(0, 0, 0, 0.1);
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F9FAFB;
+    --bg-tertiary: #F3F4F6;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #6B7280;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --card-bg: #FFFFFF;
+    --input-bg: #FFFFFF;
+    --input-border: rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --header-dark-bc: #1F2937;
+    --main-dark-bc: #111827;
+    --main-head-dark-c: #ffffff;
+    --text-color: #bcb6b6;
+    --glass-c: rgba(255, 255, 255, 0.1);
+    --glass-br-c: rgba(255, 255, 255, 0.2);
+    --bg-primary: #111827;
+    --bg-secondary: #1F2937;
+    --bg-tertiary: #374151;
+    --text-primary: #ffffff;
+    --text-secondary: #bcb6b6;
+    --text-muted: #9CA3AF;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --card-bg: #1F2937;
+    --input-bg: #374151;
+    --input-border: rgba(255, 255, 255, 0.2);
+  }
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

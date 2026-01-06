@@ -1,0 +1,100 @@
+
+footer div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+footer div p{
+    margin: 0px;
+    color: #e4e2e4;
+    font-size: 12px;
+}
+footer{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--header-dark-bc);
+    justify-content: space-between;
+    padding: 12px 20px 20px 20px;
+    box-shadow: 0px 0px 10px 0px var(--main-dark-bc);
+}
+
+footer svg{
+    font-size: 30px;
+    /* height: 300px; */
+    font-weight: 600;
+    color: #952a88;
+}
+
+.highlight-footer-icon{
+    background-color: rgb(149, 42, 136, 0.2);
+}
+
+.special-case-for-style-filter
+{
+    font-size: 22px !important;
+    margin: 4px;
+}
+
+@keyframes moveUP {
+    0%{
+        top: -40px;
+    }
+    100%{
+        top: -50px;
+    }
+}
+
+@keyframes moveDown {
+    0%{
+        top: -50px;
+    }
+    100%{
+        top: -40px;
+    }
+}
+
+.warning-for-login-for-love{
+    display: none;
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    /* background-color: pink; */
+    width: 100%;
+    margin: 0px;
+    margin-left: 0px !important;
+    z-index: 10000;
+    animation: moveUP 0.3s ease-in;
+}
+
+.warning-for-login-for-love p{
+    margin: 0px;
+    background-color: #952a88;
+    border-radius: 10px;
+        z-index: 10000;
+    padding: 10px;
+}
+
+.show-login-required{
+    display: flex;
+}
+
+.hide-login-required{
+    top:-40px;
+    animation: moveDown 0.3s ease-in;
+
+}
+
+@media screen and (min-width: 768px) {
+    footer{
+        display: flex;
+    }
+}

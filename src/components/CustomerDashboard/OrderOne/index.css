@@ -1,0 +1,634 @@
+.order-one-initial-cont{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--main-dark-bc);
+}
+
+.order-one-head-cont{
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    color: rgb(234, 233, 233);
+    justify-content: space-between;
+}
+
+.order-one-head-cont h1{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.order-one-head-cont button{
+    background-color:#952a88;
+    color: rgb(234, 233, 233);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.order-status-cont{
+    background-color: var(--header-dark-bc);
+    margin: 10px 20px;
+    border: 1px solid var(--glass-br-c);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.order-status-cont h1{
+    color: rgb(234, 233, 233);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.order-status-ul{
+    list-style-type: none;
+    /* margin: 0px; */
+    gap: 14px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    /* padding: 0px; */
+}
+
+.order-status-ul li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgb(234, 233, 233);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+
+.order-status-ul li p{
+    color: #deddde;
+    font-size: 14px;
+    background-color: #010f04;
+    padding: 4px 8px;
+    margin: 0px;
+    border-radius: 50%;
+    border: 2px solid var(--glass-br-c);
+    width: 30px;
+    height: 30px;
+}
+
+.only-sp-one-status-cont{
+    color: #952a88 !important;
+    font-weight: 600 !important;
+}
+
+.only-sp-one-status{
+    background-color: var(--sp-c) !important;
+    /* padding: 4px 8px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.order-details-cont{
+    background-color: rgb(149, 42, 136, 0.1);
+    margin: 10px 20px 20px 20px;
+    /* border: 1px solid var(--glass-br-c); */
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.order-details-cont h1{
+    color: rgb(234, 233, 233);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.order-details-cont p{
+    color: var(--text-color);
+    font-size: 10px;
+    font-weight: 600;
+    margin: 0px;
+    margin-bottom: 16px;
+    margin-left: 10px;
+}
+
+.table-name-order-details-one{
+    background-color: rgb(149, 42, 136, 0.3);
+    border: 1px solid rgb(149, 42, 136);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 7px;
+}
+
+.order-items-cont{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, rgb(149, 42, 136, 0.4), var(--main-dark-bc));
+    margin: 0px 20px;
+    border-radius: 10px;
+}
+
+
+.order-items-cont ul{
+    list-style-type: none;
+    margin: 0px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.order-item-one-cont{
+    display: flex;
+    align-items: center;
+
+}
+
+.order-item-one-cont img{
+    width: 40px;
+    height: inherit;
+}
+
+.order-item-name{
+    color: rgb(234, 233, 233);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0px;
+    margin-left: 10px;
+
+}
+
+.order-items-divider{
+    border: 1px solid var(--glass-br-c);
+    /* margin: 0px 20px; */
+    width: 80%;
+}
+.order-item-price{
+    color: rgb(234, 233, 233);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0px;
+    margin-left: auto;
+}
+
+.order-summary-title{
+    color: rgb(234, 233, 233);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0px 0px 10px 20px;
+}
+
+.order-summary-cont{
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px;
+}
+
+.order-summary-cont p{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0px;
+    color: rgb(234, 233, 233);
+}
+
+.order-summary-cont p span{
+    font-size: 12px;
+}
+
+.order-summary-total-money
+{
+    font-weight: 700;
+    font-size: 18px;
+        display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 0px;
+    color: rgb(255, 255, 255);
+
+}
+
+.new-order-button{
+    background-color:#952a88;
+    color: rgb(234, 233, 233);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.powered-by-cont-one{
+    margin: 0px;
+    /* margin-top: auto; */
+    display: flex;
+    align-items: center;
+    padding: 0px 10px;
+    background-color: var(--header-dark-bc);
+    border-top: 1px solid var(--glass-br-c)
+}
+
+.powered-by-one{
+    color: rgb(200, 199, 199);
+    font-size: 12px;
+    font-weight: 500;
+    margin: 10px 0px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.payment-details-main-cont{
+    background: linear-gradient(to bottom, rgb(33, 136, 56, 0.4), var(--main-dark-bc));
+    margin: 10px 20px 20px 20px;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.payment-details-title{
+    color: rgb(234, 233, 233);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.payment-details-cont{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(33, 136, 56, 0.4);
+
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.payment-details-cont-inner{
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-details-cont button{
+    background-color: #218838;
+    color: rgb(234, 233, 233);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.payment-details-cont p{
+    color: rgb(234, 233, 233);
+    font-size: 14px;
+    font-weight: 500;
+    /* margin: 0px; */
+}
+
+.payment-status{
+    background-color: rgb(255, 193, 7, 0.2);
+    border: 1px solid rgb(255, 193, 7);
+    color: rgb(234, 233, 233);
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    align-self: flex-end;
+}
+
+.payment-total{
+    font-weight: 700;
+    font-size: 18px;
+    align-self: flex-end;
+    margin: 0px;
+    color: rgb(255, 255, 255);
+}
+
+.payment-paid {
+    background-color: rgb(76, 175, 80, 0.2) !important;
+    border: 1px solid rgb(76, 175, 80) !important;
+    color: rgb(76, 175, 80) !important;
+}
+
+/* Call Waiter Popup */
+.call-waiter-popup-main-cont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.call-waiter-popup-inner-cont {
+    background-color: var(--header-dark-bc);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    border: 1px solid var(--glass-br-c);
+}
+
+.call-waiter-popup-inner-cont p {
+    color: rgb(234, 233, 233);
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.call-waiter-popup-inner-cont h1 {
+    color: rgb(234, 233, 233);
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.call-waiter-popup-inner-cont h1 span {
+    color: var(--sp-c);
+}
+
+.call-waiter-popup-buttons-cont {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.call-waiter-popup-buttons-cont .yes-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.call-waiter-popup-buttons-cont .yes-button:hover {
+    background-color: #45a049;
+}
+
+.call-waiter-popup-buttons-cont .yes-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.call-waiter-popup-buttons-cont .no-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.call-waiter-popup-buttons-cont .no-button:hover {
+    background-color: #da190b;
+}
+
+.call-waiter-popup-buttons-cont .no-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Payment Popup */
+.payment-popup-main-cont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.payment-popup-inner-cont {
+    background-color: var(--header-dark-bc);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    border: 1px solid var(--glass-br-c);
+}
+
+.payment-popup-inner-cont h1 {
+    color: rgb(234, 233, 233);
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.payment-popup-total {
+    color: rgb(234, 233, 233);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--sp-c);
+}
+
+.payment-popup-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.payment-method-button {
+    background-color: #218838;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.payment-method-button:hover {
+    background-color: #1e7e32;
+    transform: translateY(-2px);
+}
+
+.payment-method-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.payment-method-button.cash-button {
+    background-color: #952a88;
+}
+
+.payment-method-button.cash-button:hover {
+    background-color: #7a226f;
+}
+
+.payment-popup-cancel {
+    background-color: transparent;
+    color: rgb(234, 233, 233);
+    border: 1px solid var(--glass-br-c);
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.payment-popup-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.payment-popup-cancel:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.payment-loading {
+    color: rgb(234, 233, 233);
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.call-waiter-for-payment-button {
+    background-color: #952a88;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.call-waiter-for-payment-button:hover {
+    background-color: #7a226f;
+}
+
+.upi-popup-inner {
+    max-width: 450px;
+}
+
+.upi-select-text {
+    color: rgb(234, 233, 233);
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.upi-options-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.upi-option-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+    text-align: left;
+    background-color: #218838;
+}
+
+.upi-option-button:hover {
+    background-color: #1e7e32;
+}
+
+.upi-option-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.upi-option-id {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.no-upi-message {
+    padding: 20px;
+    text-align: center;
+    color: rgb(234, 233, 233);
+}
+
+.no-upi-message p {
+    margin: 10px 0;
+}
+
+/* Payment Status Screen */
+.payment-status-screen {
+    max-width: 450px;
+}
+
+.payment-status-message {
+    color: rgb(234, 233, 233);
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.payment-status-hint {
+    color: rgba(234, 233, 233, 0.7);
+    font-size: 14px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-style: italic;
+}
+
+.payment-status-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.payment-status-buttons .success-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.payment-status-buttons .success-button:hover:not(:disabled) {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.payment-status-buttons .success-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
