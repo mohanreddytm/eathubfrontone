@@ -84,7 +84,7 @@ const Tables = () => {
                 type: 'table_qr'
             };
 
-            const trasnforUrl = `http://localhost:3000/customerDashboard/${tableData.tableId}/${tableData.restaurantId}/home`;
+            const trasnforUrl = `https://eathubfrontone.vercel.app/customerDashboard/${tableData.tableId}/${tableData.restaurantId}/home`;
             
             // const qrData = JSON.stringify(tableData);
             const url = await QRCode.toDataURL(trasnforUrl, {
