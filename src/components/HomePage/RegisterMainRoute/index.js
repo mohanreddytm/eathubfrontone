@@ -216,7 +216,7 @@ const RegisterMainRoute = () => {
             
             if(!showPasswordOne && showIsConfirmPasswordMatch === "yes"){
                 setIsLoading(true);
-                const url = "https://ttbackone-v48h.onrender.com/restaurant"
+                const url = "https://eathubbackend-1.onrender.com/restaurant"
                 const options = {
                     method: 'POST',
                     headers: {

@@ -7,7 +7,7 @@
 }
 
 .main-orders-head{
-    color: aliceblue;
+    color: var(--text-primary);
     font-size: 24px;
     font-weight: 600;
     margin: 10px 0px 0px 30px;
@@ -37,7 +37,7 @@
 
 .orders-empty-cont h1{
     font-size: 20px;
-    color: aliceblue;
+    color: var(--text-primary);
     font-weight: 500;
     margin: 20px;
     text-align: center;
@@ -48,5 +48,5 @@
     border: 1px solid #952a88;
     padding: 8px 16px;
     border-radius: 4px;
-    color: white;
+    color: var(--text-primary);
 }

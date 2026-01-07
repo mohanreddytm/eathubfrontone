@@ -59,7 +59,7 @@ const MainWaiterOne = () => {
       {
         setOrdersStatus(statusOne.PENDING)
         // Fetch orders assigned to this specific waiter
-        const url = `http://localhost:8000/getOrdersWaiter/${waiterId}`;
+        const url = `https://eathubbackend-1.onrender.com/getOrdersWaiter/${waiterId}`;
         try {
           const res = await fetch(url);
           if (res.ok) {
@@ -86,7 +86,7 @@ const MainWaiterOne = () => {
 
       const fetchRestaurantDetails = async () => {
         setRestaurantDetailsStatus(statusOne.PENDING);
-        const url = `https://ttbackone-v48h.onrender.com/restaurant/${restaurantId}`;
+        const url = `https://eathubbackend-1.onrender.com/restaurant/${restaurantId}`;
         const res = await fetch(url);
         if (res.ok) {
           setRestaurantDetailsStatus(statusOne.SUCCESS);
@@ -101,7 +101,7 @@ const MainWaiterOne = () => {
 
       const fetchWaiterDetails = async () => {
         setWaiterDetailsStatus(statusOne.PENDING)
-        const url = `http://localhost:8000/waiterDetailsRestaurant/${waiterId}`;
+        const url = `https://eathubbackend-1.onrender.com/waiterDetailsRestaurant/${waiterId}`;
         try {
           const res = await fetch(url);
           if (res.ok) {
@@ -126,7 +126,7 @@ const MainWaiterOne = () => {
       const fetchAreas = async () => {
         setAreasStatus(statusOne.PENDING)
         try {
-          const res = await fetch(`https://ttbackone-v48h.onrender.com/getAreas/${restaurantId}`);
+          const res = await fetch(`https://eathubbackend-1.onrender.com/getAreas/${restaurantId}`);
           if(res.ok){
             const json = await res.json();
             const areasData = Array.isArray(json) ? json : [];
@@ -164,7 +164,7 @@ const MainWaiterOne = () => {
           // Fetch tables for each area
           const tablePromises = areasData.map(async (area) => {
             try {
-              const tablesRes = await fetch(`https://ttbackone-v48h.onrender.com/getTables/${area.id}`);
+              const tablesRes = await fetch(`https://eathubbackend-1.onrender.com/getTables/${area.id}`);
               if(tablesRes.ok) {
                 const tables = await tablesRes.json();
                 return Array.isArray(tables) ? tables : [];
@@ -202,7 +202,7 @@ const MainWaiterOne = () => {
         }
         try {
           setAdminCallsStatus(statusOne.PENDING);
-          const res = await fetch(`http://localhost:8000/getPendingAdminCallsWaiter/${waiterId}`);
+          const res = await fetch(`https://eathubbackend-1.onrender.com/getPendingAdminCallsWaiter/${waiterId}`);
           if (res.ok) {
             const json = await res.json();
             setAdminCalls(Array.isArray(json.calls) ? json.calls : []);

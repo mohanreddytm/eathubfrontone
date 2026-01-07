@@ -51,7 +51,7 @@ const MainKotOne = () => {
     const fetchRestaurantDetails = async () => {
       setRestaurantDetailsStatus(statusOne.PENDING);
       try {
-        const url = `https://ttbackone-v48h.onrender.com/restaurant/${restaurantIdFromToken}`;
+        const url = `https://eathubbackend-1.onrender.com/restaurant/${restaurantIdFromToken}`;
         const res = await fetch(url);
         if (res.ok) {
           const json = await res.json();
@@ -69,7 +69,7 @@ const MainKotOne = () => {
     const fetchChefDetails = async () => {
       setChefDetailsStatus(statusOne.PENDING);
       try {
-        const url = `http://localhost:8000/waiterDetailsRestaurant/${chefIdFromToken}`;
+        const url = `https://eathubbackend-1.onrender.com/waiterDetailsRestaurant/${chefIdFromToken}`;
         const res = await fetch(url);
         if (res.ok) {
           const json = await res.json();
@@ -88,7 +88,7 @@ const MainKotOne = () => {
       if (!restaurantIdFromToken) return;
       setOrdersStatus(statusOne.PENDING);
       try {
-        const url = `http://localhost:8000/getOrdersKitchen/${restaurantIdFromToken}`;
+        const url = `https://eathubbackend-1.onrender.com/getOrdersKitchen/${restaurantIdFromToken}`;
         const res = await fetch(url);
         if (res.ok) {
           const json = await res.json();

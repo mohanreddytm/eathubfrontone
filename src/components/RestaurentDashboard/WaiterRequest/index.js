@@ -22,7 +22,7 @@ const WaiterRequest = () => {
             
             setRequestsLoading(true);
             try {
-                const response = await fetch(`http://localhost:8000/getPendingWaiterRequests/${userId}`);
+                const response = await fetch(`https://eathubbackend-1.onrender.com/getPendingWaiterRequests/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setWaiterRequests(data.requests || []);
@@ -51,7 +51,7 @@ const WaiterRequest = () => {
             
             setWaitersLoading(true);
             try {
-                const response = await fetch(`http://localhost:8000/getWaitersWithStatus/${userId}`);
+                const response = await fetch(`https://eathubbackend-1.onrender.com/getWaitersWithStatus/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     // Sort waiters by availability: Available first, then Serving, then others
@@ -105,7 +105,7 @@ const WaiterRequest = () => {
 
             setAdminCallsLoading(true);
             try {
-                const response = await fetch(`http://localhost:8000/getAdminCallsRestaurant/${userId}`);
+                const response = await fetch(`https://eathubbackend-1.onrender.com/getAdminCallsRestaurant/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setAdminCalls(data.calls || []);
@@ -141,7 +141,7 @@ const WaiterRequest = () => {
     const handleAssignWaiter = async (requestId, waiterId) => {
         setAssigningWaiter(requestId);
         try {
-            const response = await fetch(`http://localhost:8000/assignWaiterToRequest/${requestId}`, {
+            const response = await fetch(`https://eathubbackend-1.onrender.com/assignWaiterToRequest/${requestId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ const WaiterRequest = () => {
 
             if (response.ok) {
                 // Refresh requests
-                const refreshResponse = await fetch(`http://localhost:8000/getPendingWaiterRequests/${userId}`);
+                const refreshResponse = await fetch(`https://eathubbackend-1.onrender.com/getPendingWaiterRequests/${userId}`);
                 if (refreshResponse.ok) {
                     const data = await refreshResponse.json();
                     setWaiterRequests(data.requests || []);
@@ -221,13 +221,13 @@ const WaiterRequest = () => {
         if (!waiterId || !userId) return;
         setUpdatingWaiterStatus(waiterId);
         try {
-            await fetch(`http://localhost:8000/updateWaiterStatus/${waiterId}`, {
+            await fetch(`https://eathubbackend-1.onrender.com/updateWaiterStatus/${waiterId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: 'available' }),
             });
             // Refresh waiters after status update
-            const response = await fetch(`http://localhost:8000/getWaitersWithStatus/${userId}`);
+            const response = await fetch(`https://eathubbackend-1.onrender.com/getWaitersWithStatus/${userId}`);
             if (response.ok) {
                 const data = await response.json();
                 const sortedWaiters = (data.waiters || []).sort((a, b) => {
@@ -273,7 +273,7 @@ const WaiterRequest = () => {
                         // Refresh requests
                         if (userId) {
                             setRequestsLoading(true);
-                            fetch(`http://localhost:8000/getPendingWaiterRequests/${userId}`)
+                            fetch(`https://eathubbackend-1.onrender.com/getPendingWaiterRequests/${userId}`)
                                 .then(res => res.json())
                                 .then(data => {
                                     setWaiterRequests(data.requests || []);
@@ -330,18 +330,18 @@ const WaiterRequest = () => {
                                                                         className='waiter-request-complete-btn'
                                                                         onClick={async () => {
                                                                             try {
-                                                                                const response = await fetch(`http://localhost:8000/completeWaiterRequest/${request.id}`, {
+                                                                                const response = await fetch(`https://eathubbackend-1.onrender.com/completeWaiterRequest/${request.id}`, {
                                                                                     method: 'PUT'
                                                                                 });
                                                                                 if (response.ok) {
                                                                                     // Refresh requests
-                                                                                    const refreshResponse = await fetch(`http://localhost:8000/getPendingWaiterRequests/${userId}`);
+                                                                                    const refreshResponse = await fetch(`https://eathubbackend-1.onrender.com/getPendingWaiterRequests/${userId}`);
                                                                                     if (refreshResponse.ok) {
                                                                                         const data = await refreshResponse.json();
                                                                                         setWaiterRequests(data.requests || []);
                                                                                     }
                                                                                     // Refresh waiters to update order
-                                                                                    const waitersResponse = await fetch(`http://localhost:8000/getWaitersWithStatus/${userId}`);
+                                                                                    const waitersResponse = await fetch(`https://eathubbackend-1.onrender.com/getWaitersWithStatus/${userId}`);
                                                                                     if (waitersResponse.ok) {
                                                                                         const waitersData = await waitersResponse.json();
                                                                                         const sortedWaiters = (waitersData.waiters || []).sort((a, b) => {

@@ -17,11 +17,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 import { MdNoteAlt, MdDiscount, MdDeleteForever } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
-
 const POSPage = () => {
-    const navigate = useNavigate();
-    const {tablesData, updateOrdersStatus, menuData, menuCategories, userId, addMenuInPOS, staffData, clickedOrder, updateClickedOrder, updateCurrentMenu, orders} = useContext(AllInOne);
+
+    const {tablesData, updateOrdersStatus, menuData, menuCategories, userId, addMenuInPOS, staffData, clickedOrder} = useContext(AllInOne);
     const [menuDataInPOS, setMenuDataInPOS] = useState([]);
 
     // Play notification sound function
@@ -117,308 +115,6 @@ const POSPage = () => {
 
     const onClickDeleteItem = (id) => {
         setOrderItems(orderItems.filter(item => item.id !== id));
-    }
-
-    // Delete item from existing order
-    const onClickDeleteItemFromOrder = async (itemId) => {
-        if (!clickedOrder || !clickedOrder.id) return;
-        
-        try {
-            // Parse current items
-            let items = clickedOrder.items;
-            if (typeof items === 'string') {
-                try {
-                    items = JSON.parse(items);
-                } catch (e) {
-                    items = [];
-                }
-            }
-            if (!Array.isArray(items)) {
-                items = [];
-            }
-            
-            // Remove the item
-            const updatedItems = items.filter(item => {
-                const id = item.id || item.item_id;
-                return id !== itemId;
-            });
-            
-            // Calculate new total
-            const newTotal = updatedItems.reduce((acc, item) => {
-                const price = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                const qty = parseInt(item.quantity || 1);
-                return acc + (price * qty);
-            }, 0);
-            
-            // Update order in backend
-            const response = await fetch(`http://localhost:8000/updateOrder/${clickedOrder.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    items: JSON.stringify(updatedItems),
-                    total_price: newTotal
-                })
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                // Update clickedOrder
-                const updatedOrder = { ...clickedOrder, items: updatedItems, total_price: newTotal };
-                updateClickedOrder(updatedOrder);
-                updateOrdersStatus();
-            } else {
-                alert('Failed to delete item from order');
-            }
-        } catch (error) {
-            console.error('Error deleting item:', error);
-            alert('Failed to delete item from order');
-        }
-    }
-
-    // Handle New KOT - Add items to existing order
-    const handleNewKOT = async () => {
-        if (orderItems.length === 0) {
-            setMadeForItemsError(true);
-            setTimeout(() => setMadeForItemsError(false), 2000);
-            return;
-        }
-
-        if (!clickedOrder || !clickedOrder.id) return;
-
-        try {
-            // Parse current items
-            let currentItems = clickedOrder.items;
-            if (typeof currentItems === 'string') {
-                try {
-                    currentItems = JSON.parse(currentItems);
-                } catch (e) {
-                    currentItems = [];
-                }
-            }
-            if (!Array.isArray(currentItems)) {
-                currentItems = [];
-            }
-
-            // Merge new items with existing items
-            const mergedItems = [...currentItems];
-            orderItems.forEach(newItem => {
-                const existingItemIndex = mergedItems.findIndex(item => {
-                    const itemId = item.id || item.item_id;
-                    const newItemId = newItem.id || newItem.item_id;
-                    return itemId === newItemId;
-                });
-
-                if (existingItemIndex >= 0) {
-                    // Item exists, increase quantity
-                    mergedItems[existingItemIndex].quantity = (mergedItems[existingItemIndex].quantity || 1) + newItem.quantity;
-                } else {
-                    // New item, add it
-                    mergedItems.push({
-                        id: newItem.id,
-                        cart_item_name: newItem.name,
-                        cart_item_price: newItem.price,
-                        quantity: newItem.quantity
-                    });
-                }
-            });
-
-            // Calculate new total
-            const newTotal = mergedItems.reduce((acc, item) => {
-                const price = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                const qty = parseInt(item.quantity || 1);
-                return acc + (price * qty);
-            }, 0);
-
-            // Update order in backend
-            const response = await fetch(`http://localhost:8000/updateOrder/${clickedOrder.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    items: JSON.stringify(mergedItems),
-                    total_price: newTotal,
-                    order_status: 'KOT' // Ensure status is KOT
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const updatedOrder = { 
-                    ...clickedOrder, 
-                    items: mergedItems, 
-                    total_price: newTotal,
-                    order_status: 'KOT'
-                };
-                updateClickedOrder(updatedOrder);
-                updateOrdersStatus();
-                
-                // Clear orderItems
-                setOrderItems([]);
-                setMadeForItemsError(false);
-                alert('Items added to order successfully!');
-            } else {
-                alert('Failed to add items to order');
-            }
-        } catch (error) {
-            console.error('Error adding items to order:', error);
-            alert('Failed to add items to order');
-        }
-    }
-
-    // Handle BILL - Change order_status to Billed
-    const handleBill = async () => {
-        if (!clickedOrder || !clickedOrder.id) return;
-
-        try {
-            const response = await fetch(`http://localhost:8000/updateOrderStatus/${clickedOrder.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    order_status: 'Billed'
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const updatedOrder = { ...clickedOrder, order_status: 'Billed' };
-                updateClickedOrder(updatedOrder);
-                updateOrdersStatus();
-                alert('Order billed successfully!');
-            } else {
-                alert('Failed to bill order');
-            }
-        } catch (error) {
-            console.error('Error billing order:', error);
-            alert('Failed to bill order');
-        }
-    }
-
-    // Handle BILL & PRINT
-    const handleBillAndPrint = async () => {
-        if (!clickedOrder || !clickedOrder.id) return;
-
-        try {
-            // First bill the order
-            const response = await fetch(`http://localhost:8000/updateOrderStatus/${clickedOrder.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    order_status: 'Billed'
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const updatedOrder = { ...clickedOrder, order_status: 'Billed' };
-                updateClickedOrder(updatedOrder);
-                updateOrdersStatus();
-                
-                // Print order details
-                window.print();
-                alert('Order billed and printed successfully!');
-            } else {
-                alert('Failed to bill order');
-            }
-        } catch (error) {
-            console.error('Error billing and printing order:', error);
-            alert('Failed to bill and print order');
-        }
-    }
-
-    // Handle BILL & PAYMENT - Bill order and navigate to payment with order ID
-    const handleBillAndPayment = async () => {
-        if (!clickedOrder || !clickedOrder.id) return;
-
-        try {
-            // First bill the order
-            const response = await fetch(`http://localhost:8000/updateOrderStatus/${clickedOrder.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    order_status: 'Billed'
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const updatedOrder = { ...clickedOrder, order_status: 'Billed' };
-                updateClickedOrder(updatedOrder);
-                updateOrdersStatus();
-                
-                // Navigate to payment section and store order ID in localStorage for pre-filling
-                localStorage.setItem('selectedOrderIdForPayment', clickedOrder.id);
-                // Also store the order total for pre-filling amount
-                let items = clickedOrder.items;
-                if (typeof items === 'string') {
-                    try {
-                        items = JSON.parse(items);
-                    } catch (e) {
-                        items = [];
-                    }
-                }
-                if (!Array.isArray(items)) items = [];
-                const subtotal = items.reduce((acc, item) => {
-                    const price = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                    const qty = parseInt(item.quantity || 1);
-                    return acc + (price * qty);
-                }, 0);
-                const discount = clickedOrder.discount_amount 
-                    ? (typeof clickedOrder.discount_amount === 'string' 
-                        ? parseFloat(clickedOrder.discount_amount) 
-                        : clickedOrder.discount_amount)
-                    : 0;
-                let tax = clickedOrder.tax_amount 
-                    ? (typeof clickedOrder.tax_amount === 'string' 
-                        ? parseFloat(clickedOrder.tax_amount) 
-                        : clickedOrder.tax_amount)
-                    : 0;
-                const total = subtotal + tax - discount;
-                localStorage.setItem('selectedOrderAmountForPayment', total.toString());
-                
-                updateCurrentMenu(9); // Navigate to Payment section (menu id 9)
-                alert('Order billed! Redirecting to payment...');
-            } else {
-                alert('Failed to bill order');
-            }
-        } catch (error) {
-            console.error('Error billing order:', error);
-            alert('Failed to bill order');
-        }
-    }
-
-    // Handle Delete Order
-    const handleDeleteOrder = async () => {
-        if (!clickedOrder || !clickedOrder.id) return;
-
-        const confirmDelete = window.confirm('Are you sure you want to delete this order? This action cannot be undone.');
-        if (!confirmDelete) return;
-
-        try {
-            const response = await fetch(`http://localhost:8000/deleteOrder/${clickedOrder.id}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                updateClickedOrder(null);
-                updateOrdersStatus();
-                alert('Order deleted successfully!');
-            } else {
-                const errorData = await response.json();
-                alert(`Failed to delete order: ${errorData.error || 'Unknown error'}`);
-            }
-        } catch (error) {
-            console.error('Error deleting order:', error);
-            alert('Failed to delete order');
-        }
     }
 
     const onClickResetBtn = () => {
@@ -593,7 +289,7 @@ const POSPage = () => {
         setKotClicked(true);
         
         try {
-            const url = "http://localhost:8000/addNewOrder";
+            const url = "https://eathubbackend-1.onrender.com/addNewOrder";
             const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
             
             // Calculate discount
@@ -656,7 +352,7 @@ const POSPage = () => {
                             },
                             body: JSON.stringify({tableId: selectedTable.id, status: "use"})
                         };
-                        const tableResponse = await fetch("http://localhost:8000/restaurant_details/updatedTableStatus", tableOptions);
+                        const tableResponse = await fetch("https://eathubbackend-1.onrender.com/restaurant_details/updatedTableStatus", tableOptions);
                         if(tableResponse.ok){
                             console.log("Table status updated successfully");
                         }
@@ -699,30 +395,17 @@ const POSPage = () => {
     }
 
     const onClickMoveToStatusOne =  async (status) => {
-        if (!clickedOrder || !clickedOrder.id) return;
-        
         try{
             const newStatus = status === "Pending" ? "Confirmed" : status === "Confirmed" ? "Preparing" : status === "Preparing" ? "Ready" : "";
-            if (!newStatus) {
-                alert("Order is already at the final status");
-                return;
-            }
-            
-            const url = `http://localhost:8000/updateStatus/${clickedOrder.id}/${newStatus}`;
+            const url = `https://eathubbackend-1.onrender.com/updateStatus/${clickedOrder.id}/${newStatus}`;
             const response = await fetch(url, {
                 method: "PUT",
             });
-            
             if(response.ok){
-                const data = await response.json();
                 console.log("Order status updated successfully");
-                
-                // Update clickedOrder state without reload
-                const updatedOrder = { ...clickedOrder, status: newStatus };
-                updateClickedOrder(updatedOrder);
-                
-                // Refresh orders list
-                updateOrdersStatus();
+                window.location.reload(false);
+                // setClickedOrder({...clickedOrder, status: newStatus});
+                // updateOrdersStatus();
             }else{
                 const errorData = await response.json();
                 console.error("Failed to update order status:", errorData);
@@ -790,62 +473,28 @@ const POSPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {(() => {
-                            // Parse items if they're a JSON string
-                            let items = clickedOrder.items;
-                            if (typeof items === 'string') {
-                                try {
-                                    items = JSON.parse(items);
-                                } catch (e) {
-                                    console.error("Error parsing items:", e);
-                                    items = [];
-                                }
-                            }
-                            if (!Array.isArray(items)) {
-                                items = [];
-                            }
-                            
-                            return items.map((item, index) => {
-                                // Handle different item field names
-                                const itemName = item.cart_item_name || item.item_name || item.name || 'Unknown Item';
-                                const itemPrice = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                                const itemQuantity = parseInt(item.quantity || 1);
-                                const itemId = item.id || item.item_id || `item-${index}`;
-                                const itemTotal = itemPrice * itemQuantity;
-                                
-                                return(
-                                    <tr className="pos-page-main-cont-two-table-tbody-tr" key={itemId}>
-                                        <td><p className="pos-page-main-cont-two-table-tbody-tr-name">{itemName}</p></td>
-                                        <td><div className="pos-page-main-cont-two-table-tbody-tr-qty pos-edit-sp">
-                                            {itemQuantity}
+                        {clickedOrder.items.map((item) => {
+                            // console.log("item - one : ", item);
+                            return(
+                                <tr className="pos-page-main-cont-two-table-tbody-tr"  key={item.id}>
+                                    <td><p className="pos-page-main-cont-two-table-tbody-tr-name">{item.cart_item_name}</p></td>
+                                    <td><div className="pos-page-main-cont-two-table-tbody-tr-qty pos-edit-sp">
+                                        {/* <p onClick={onClickMinusMenuItem(item.id)}>-</p> */}
+                                        {item.quantity}
+                                        {/* <p onClick={onClickPlusMenuItem(item.id)}>+</p> */}
                                         </div></td>
-                                        <td>₹ {itemPrice.toFixed(2)}</td>
-                                        <td>₹ {itemTotal.toFixed(2)}</td>
-                                        <td><button onClick={() => onClickDeleteItemFromOrder(itemId)} className="pos-page-main-cont-two-table-tbody-tr-button"><MdDeleteForever /></button></td>
-                                    </tr>
-                                )
-                            });
-                        })()}
+                                    <td>₹ {item.cart_item_price}</td>
+                                    <td>₹ {item.cart_item_price * item.quantity}</td>
+                                    <td><button onClick={() => onClickDeleteItem(item.id)} className="pos-page-main-cont-two-table-tbody-tr-button"><MdDeleteForever /></button></td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
-                {(() => {
-                    let items = clickedOrder.items;
-                    if (typeof items === 'string') {
-                        try {
-                            items = JSON.parse(items);
-                        } catch (e) {
-                            items = [];
-                        }
-                    }
-                    if (!Array.isArray(items)) {
-                        items = [];
-                    }
-                    
-                    return items.length === 0 && <div className={`pos-page-main-cont-two-table-tbody-div ${madeForItemsError ? 'blink-for-error' : ''}`}>
-                        {madeForItemsError ?<p>Select an item from the menu <br/> to proceed with KOT</p>
-                     :  <p>Please select an item to add <br/> to the order !</p>}
-                    </div>;
-                })()}
+                {clickedOrder.items.length === 0 && <div className={`pos-page-main-cont-two-table-tbody-div ${madeForItemsError ? 'blink-for-error' : ''}`}>
+                    {madeForItemsError ?<p>Select an item from the menu <br/> to proceed with KOT</p>
+                 :  <p>Please select an item to add <br/> to the order !</p>}
+                </div>   }
  
                 <div className="pos-page-main-cont-two-table-tbody">
                     <div className="pos-page-main-cont-two-table-tbody-button-cont-one">
@@ -854,36 +503,11 @@ const POSPage = () => {
                     </div>
                     <div>
                         <p>Item(s)</p>
-                        <p>{(() => {
-                            let items = clickedOrder.items;
-                            if (typeof items === 'string') {
-                                try {
-                                    items = JSON.parse(items);
-                                } catch (e) {
-                                    items = [];
-                                }
-                            }
-                            return Array.isArray(items) ? items.length : 0;
-                        })()}</p>
+                        <p>{clickedOrder.items.length}</p>
                     </div>
                     <div>
                         <p>Subtotal</p>
-                        <p>₹ {(() => {
-                            let items = clickedOrder.items;
-                            if (typeof items === 'string') {
-                                try {
-                                    items = JSON.parse(items);
-                                } catch (e) {
-                                    items = [];
-                                }
-                            }
-                            if (!Array.isArray(items)) items = [];
-                            return items.reduce((acc, item) => {
-                                const price = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                                const qty = parseInt(item.quantity || 1);
-                                return acc + (price * qty);
-                            }, 0).toFixed(2);
-                        })()}</p>
+                        <p>₹ {clickedOrder.items.reduce((acc, item) => acc + (item.cart_item_price || item.price) * item.quantity, 0).toFixed(2)}</p>
                     </div>
                     <div>
                         <p>Discount</p>
@@ -900,20 +524,7 @@ const POSPage = () => {
                     <div>
                         <p>Tax</p>
                         <p>₹ {(() => {
-                            let items = clickedOrder.items;
-                            if (typeof items === 'string') {
-                                try {
-                                    items = JSON.parse(items);
-                                } catch (e) {
-                                    items = [];
-                                }
-                            }
-                            if (!Array.isArray(items)) items = [];
-                            const subtotal = items.reduce((acc, item) => {
-                                const price = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                                const qty = parseInt(item.quantity || 1);
-                                return acc + (price * qty);
-                            }, 0);
+                            const subtotal = clickedOrder.items.reduce((acc, item) => acc + (item.cart_item_price || item.price) * item.quantity, 0);
                             if (finalTaxNumber && finalTaxType === "Percentage") {
                                 return (subtotal * parseFloat(finalTaxNumber) / 100).toFixed(2);
                             } else if (finalTaxNumber && finalTaxType === "Fixed Amount") {
@@ -930,20 +541,7 @@ const POSPage = () => {
                     <div className="pos-page-main-cont-two-table-tbody-button-cont-two-total">
                         <p>Total</p>
                         <p>₹ {(() => {
-                            let items = clickedOrder.items;
-                            if (typeof items === 'string') {
-                                try {
-                                    items = JSON.parse(items);
-                                } catch (e) {
-                                    items = [];
-                                }
-                            }
-                            if (!Array.isArray(items)) items = [];
-                            const subtotal = items.reduce((acc, item) => {
-                                const price = parseFloat(item.cart_item_price || item.price || item.item_price || 0);
-                                const qty = parseInt(item.quantity || 1);
-                                return acc + (price * qty);
-                            }, 0);
+                            const subtotal = clickedOrder.items.reduce((acc, item) => acc + (item.cart_item_price || item.price) * item.quantity, 0);
                             const discount = clickedOrder.discount_amount 
                                 ? (typeof clickedOrder.discount_amount === 'string' 
                                     ? parseFloat(clickedOrder.discount_amount) 
@@ -964,11 +562,11 @@ const POSPage = () => {
                     </div>
                 </div>
                 <div className="pos-edit-order-button-cont">
-                    <button className="pos-edit-order-button-KOT" onClick={handleNewKOT}>New KOT</button>
-                    <button className="pos-edit-order-button-bill" onClick={handleBill}>BILL</button>
-                    <button className="pos-edit-order-button-b-p" onClick={handleBillAndPrint}>BILL & PRINT</button>
-                    <button className="pos-edit-order-button-b-p2" onClick={handleBillAndPayment}>BILL & PAYMENT</button>
-                    <button className="pos-edit-order-button-delete" onClick={handleDeleteOrder}>Delete Order</button>
+                    <button className="pos-edit-order-button-KOT">New KOT</button>
+                    <button className="pos-edit-order-button-bill">BILL</button>
+                    <button className="pos-edit-order-button-b-p">BILL & PRINT</button>
+                    <button className="pos-edit-order-button-b-p2">BILL & PAYMENT</button>
+                    <button className="pos-edit-order-button-delete">Delete Order</button>
                 </div>
                 
 

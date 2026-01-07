@@ -99,6 +99,8 @@ const statusOne = {
   PENDING: "PENDING",
 }
 
+const API_BASE_URL = 'https://eathubbackend-1.onrender.com';
+
 
 
 const RestaurantDashboard = () => {
@@ -173,7 +175,7 @@ const RestaurantDashboard = () => {
         data.map(async each => {
             const getTablesDataInside = async () => {
                 try{
-                    const url = `https://ttbackone-v48h.onrender.com/getTables/${each.id}`;
+                    const url = `https://eathubbackend-1.onrender.com/getTables/${each.id}`;
                     const response = await fetch(url);
                     if(response.ok){
                         const jsonOne = await response.json();
@@ -211,7 +213,7 @@ const RestaurantDashboard = () => {
       const getRestaurantData = async () => {
         try{
           setDataStatus(statusOne.PENDING);
-          const url  = `http://localhost:8000/restaurant/${restaurantId}`
+          const url  = `${API_BASE_URL}/restaurant/${restaurantId}`
           const response = await fetch(url);
     
           if(response.ok){
@@ -228,7 +230,7 @@ const RestaurantDashboard = () => {
             
             // Fetch and apply theme preference
             try {
-              const themeResponse = await fetch(`http://localhost:8000/getDisplaySettings/${restaurantId}`);
+              const themeResponse = await fetch(`${API_BASE_URL}/getDisplaySettings/${restaurantId}`);
               if (themeResponse.ok) {
                 const themeData = await themeResponse.json();
                 if (themeData.settings && themeData.settings.theme) {
@@ -253,7 +255,7 @@ const RestaurantDashboard = () => {
       const getMenuCategories = async () => {
         try{
           setMenuCategoriesStatus(statusOne.PENDING);
-          const url = `https://ttbackone-v48h.onrender.com/restaurant_details/getMenuCategory/${restaurantId}`;
+          const url = `${API_BASE_URL}/restaurant_details/getMenuCategory/${restaurantId}`;
           const response = await fetch(url);
           if(response.ok){
             const jsonOne = await response.json();
@@ -273,16 +275,21 @@ const RestaurantDashboard = () => {
 
     const fetchStaffDetails = async () => {
         setStaffStatus(statusOne.LOADING);
-        const url = `https://ttbackone-v48h.onrender.com/restaurant_details/getStaff/${restaurantId}`;
-        const response = await fetch(url);
-        if(response.ok){
-            const data = await response.json();
-            console.log(data)
-            setStaffData(data.staff);
-            setStaffStatus(statusOne.SUCCESS);
-        }else{
-            console.log('Failed to fetch staff details');
-            setStaffStatus(statusOne.ERROR);
+        try{
+          const url = `${API_BASE_URL}/restaurant_details/getStaff/${restaurantId}`;
+          const response = await fetch(url);
+          if(response.ok){
+              const data = await response.json();
+              console.log(data)
+              setStaffData(data.staff);
+              setStaffStatus(statusOne.SUCCESS);
+          }else{
+              console.log('Failed to fetch staff details');
+              setStaffStatus(statusOne.ERROR);
+          }
+        }catch(error){
+          console.error('Error fetching staff details:', error);
+          setStaffStatus(statusOne.ERROR);
         }
     }
     fetchStaffDetails();
@@ -290,7 +297,7 @@ const RestaurantDashboard = () => {
       const getMenuData = async () => {
         try{
           setMenuDataStatus(statusOne.PENDING);
-          const url = `https://ttbackone-v48h.onrender.com/getMenuItems/${restaurantId}`;
+          const url = `${API_BASE_URL}/getMenuItems/${restaurantId}`;
           const response = await fetch(url);
           if(response.ok){
             const jsonOne = await response.json();
@@ -310,7 +317,7 @@ const RestaurantDashboard = () => {
       const fetchOrders = async () => {
         setOrdersStatus(statusOne.PENDING);
         try{
-          const response = await fetch(`https://ttbackone-v48h.onrender.com/getOrderRestaurant/${restaurantId}`)
+          const response = await fetch(`${API_BASE_URL}/getOrderRestaurant/${restaurantId}`)
           if(response.ok){
               const data = await response.json()
               console.log(data.order)
@@ -321,7 +328,7 @@ const RestaurantDashboard = () => {
               console.log("Failed to fetch orders")
           }
         }catch(e){
-          setMenuDataStatus(statusOne.FAILED);
+          setOrdersStatus(statusOne.FAILED);
         }
       }
       fetchOrders();
@@ -330,7 +337,7 @@ const RestaurantDashboard = () => {
       const getAreasData = async () => {
         try{
           setAreasDataStatus(statusOne.PENDING);
-          const url = `https://ttbackone-v48h.onrender.com/getAreas/${restaurantId}`;
+          const url = `${API_BASE_URL}/getAreas/${restaurantId}`;
           const response = await fetch(url);
           if(response.ok){
             const jsonOne = await response.json();
@@ -377,8 +384,9 @@ const RestaurantDashboard = () => {
     useEffect(() => {
       const fetchOrders = async () => {
         // setOrdersStatus(statusOne.PENDING);
-        console.log(userId)
-          const response = await fetch(`http://localhost:8000/getOrderRestaurant/${userId}`)
+        try{
+          console.log(userId)
+          const response = await fetch(`${API_BASE_URL}/getOrderRestaurant/${userId}`)
           if(response.ok){
               const data = await response.json()
               console.log(data.order)
@@ -412,6 +420,10 @@ const RestaurantDashboard = () => {
             setOrdersStatus(statusOne.FAILED);
               console.log("Failed to fetch orders")
           }
+        }catch(error){
+          setOrdersStatus(statusOne.FAILED);
+          console.error('Error fetching orders:', error);
+        }
       }
       fetchOrders()
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -532,7 +544,7 @@ const RestaurantDashboard = () => {
       setDataStatus(statusOne.PENDING);
       const getRestaurantData = async () => {
         try{
-          const url = `https://ttbackone-v48h.onrender.com/restaurant/${userId}`;
+          const url = `https://eathubbackend-1.onrender.com/restaurant/${userId}`;
           const response = await fetch(url);
           if(response.ok){
             const jsonOne = await response.json();
@@ -700,7 +712,7 @@ const RestaurantDashboard = () => {
     setSelectedWaiterId(null);
 
     try {
-      const res = await fetch(`http://localhost:8000/getWaitersWithStatus/${userId}`);
+      const res = await fetch(`https://eathubbackend-1.onrender.com/getWaitersWithStatus/${userId}`);
       if (!res.ok) {
         setWaitersError('Failed to load waiters. Please try again.');
         setAvailableWaiters([]);
@@ -749,7 +761,7 @@ const RestaurantDashboard = () => {
         message: 'Admin is calling you to the counter.'
       };
 
-      const res = await fetch('http://localhost:8000/createAdminCall', {
+      const res = await fetch('https://eathubbackend-1.onrender.com/createAdminCall', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

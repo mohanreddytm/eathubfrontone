@@ -59,7 +59,7 @@ const Cart = () => {
     }
 
     const onClickOrder = async () => {
-        const url = "http://localhost:8000/addNewOrder"
+        const url = "https://eathubbackend-1.onrender.com/addNewOrder"
         const orderOne = {
                 id:uuidv4(),
                 table_id:tableId,

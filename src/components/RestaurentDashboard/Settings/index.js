@@ -121,7 +121,7 @@ const Settings = () => {
         setLoading(false)
       } else if (userId) {
         try {
-          const url = `https://ttbackone-v48h.onrender.com/restaurant/${userId}`
+          const url = `https://eathubbackend-1.onrender.com/restaurant/${userId}`
           const response = await fetch(url)
           if (response.ok) {
             const json = await response.json()
@@ -157,7 +157,7 @@ const Settings = () => {
     const fetchPaymentSettings = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`http://localhost:8000/getPaymentSettings/${userId}`);
+        const response = await fetch(`https://eathubbackend-1.onrender.com/getPaymentSettings/${userId}`);
         if (response.ok) {
           const data = await response.json();
           if (data.settings) {
@@ -180,7 +180,7 @@ const Settings = () => {
     const fetchDisplaySettings = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`http://localhost:8000/getDisplaySettings/${userId}`);
+        const response = await fetch(`https://eathubbackend-1.onrender.com/getDisplaySettings/${userId}`);
         if (response.ok) {
           const data = await response.json();
           if (data.settings) {
@@ -229,7 +229,7 @@ const Settings = () => {
       setTheme(value)
       // Save theme to backend
       if (userId) {
-        fetch(`http://localhost:8000/updateDisplaySettings/${userId}`, {
+        fetch(`https://eathubbackend-1.onrender.com/updateDisplaySettings/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -252,28 +252,18 @@ const Settings = () => {
     setSaveStatus('saving')
     try {
       if (section === 'payment') {
-        // Validate UPI IDs if online payment is enabled
-        if (paymentSettings.paymentMethods.online && (!paymentSettings.upi_ids || paymentSettings.upi_ids.length === 0)) {
-          alert('Please add at least one UPI ID to enable online payment');
-          setSaveStatus('error');
-          setTimeout(() => setSaveStatus(null), 3000);
-          return;
-        }
-        
-        const response = await fetch(`http://localhost:8000/updatePaymentSettings/${userId}`, {
+        const response = await fetch(`https://eathubbackend-1.onrender.com/updatePaymentSettings/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(paymentSettings)
         });
-        
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || 'Failed to save payment settings');
+          throw new Error('Failed to save payment settings');
         }
       } else if (section === 'display') {
-        const response = await fetch(`http://localhost:8000/updateDisplaySettings/${userId}`, {
+        const response = await fetch(`https://eathubbackend-1.onrender.com/updateDisplaySettings/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -295,8 +285,6 @@ const Settings = () => {
     } catch (error) {
       console.error('Error saving settings:', error);
       setSaveStatus('error')
-      // Show error message to user
-      alert(`Failed to save settings: ${error.message || 'Unknown error'}`);
       setTimeout(() => setSaveStatus(null), 3000)
     }
   }
@@ -714,7 +702,7 @@ const Settings = () => {
                     </div>
                   </div>
                   
-                  {(paymentSettings.paymentMethods.upi || paymentSettings.paymentMethods.online) && (
+                  {paymentSettings.paymentMethods.upi && (
                     <div className="settings-form-group">
                       <label>UPI Payment IDs</label>
                       <p className="settings-help-text">Add UPI IDs that customers can use to make payments</p>

@@ -56,7 +56,7 @@ const Reservation = () => {
       }
 
       try {
-        const response = await fetch(`https://ttbackone-v48h.onrender.com/getReservations/${userId}`)
+        const response = await fetch(`https://eathubbackend-1.onrender.com/getReservations/${userId}`)
         if (response.ok) {
           const data = await response.json()
           // Process reservations to include table name
@@ -147,7 +147,7 @@ const Reservation = () => {
         created_at: new Date().toISOString()
       }
 
-      const response = await fetch('https://ttbackone-v48h.onrender.com/addReservation', {
+      const response = await fetch('https://eathubbackend-1.onrender.com/addReservation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -231,7 +231,7 @@ const Reservation = () => {
         status: reservationForm.status
       }
 
-      const response = await fetch(`https://ttbackone-v48h.onrender.com/updateReservation/${editingReservation.id}`, {
+      const response = await fetch(`https://eathubbackend-1.onrender.com/updateReservation/${editingReservation.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -278,7 +278,7 @@ const Reservation = () => {
     }
 
     try {
-      const response = await fetch(`https://ttbackone-v48h.onrender.com/deleteReservation/${reservationId}`, {
+      const response = await fetch(`https://eathubbackend-1.onrender.com/deleteReservation/${reservationId}`, {
         method: 'DELETE'
       })
       

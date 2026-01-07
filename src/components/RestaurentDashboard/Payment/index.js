@@ -11,7 +11,6 @@ const Payment = () => {
   const [payments, setPayments] = useState([])
   const [filteredPayments, setFilteredPayments] = useState([])
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false)
-  const [refreshPayments, setRefreshPayments] = useState(0)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('paid')
   const [selectedTable, setSelectedTable] = useState('all')
@@ -44,30 +43,12 @@ const Payment = () => {
     return { start: today, end: endOfToday }
   }
 
-  // Check for pre-filled order ID from POS
-  useEffect(() => {
-    const prefillOrderId = localStorage.getItem('selectedOrderIdForPayment');
-    const prefillAmount = localStorage.getItem('selectedOrderAmountForPayment');
-    
-    if (prefillOrderId) {
-      setAddPaymentForm(prev => ({
-        ...prev,
-        orderId: prefillOrderId,
-        amount: prefillAmount || prev.amount
-      }));
-      setShowAddPaymentModal(true);
-      // Clear the localStorage after using it
-      localStorage.removeItem('selectedOrderIdForPayment');
-      localStorage.removeItem('selectedOrderAmountForPayment');
-    }
-  }, []);
-
   // Fetch payments from payments table
   useEffect(() => {
     const fetchPayments = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`http://localhost:8000/getPayments/${userId}`);
+        const response = await fetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
         if (response.ok) {
           const data = await response.json();
           const { start, end } = getTodayRange();
@@ -110,7 +91,7 @@ const Payment = () => {
     // Refresh every 10 seconds
     const interval = setInterval(fetchPayments, 10000);
     return () => clearInterval(interval);
-  }, [userId, refreshPayments])
+  }, [userId])
 
   // Calculate statistics
   useEffect(() => {
@@ -188,113 +169,38 @@ const Payment = () => {
   // Handle add payment
   const handleAddPayment = async () => {
     if (!addPaymentForm.orderId || !addPaymentForm.amount) {
-      alert('Please fill in all required fields (Order ID and Amount)')
-      return
-    }
-
-    // Validate amount
-    const amount = parseFloat(addPaymentForm.amount);
-    if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid amount greater than 0')
+      alert('Please fill in all required fields')
       return
     }
 
     try {
-      // Find order details to get table information
-      let orderDetails = null;
-      if (orders && ordersStatus === "SUCCESS") {
-        orderDetails = orders.find(order => 
-          order.id === addPaymentForm.orderId || 
-          order.order_number === parseInt(addPaymentForm.orderId) ||
-          String(order.order_number) === String(addPaymentForm.orderId)
-        );
+      // Here you would make an API call to add payment
+      // For now, we'll simulate it
+      const newPayment = {
+        id: Date.now(),
+        orderId: addPaymentForm.orderId,
+        orderNumber: parseInt(addPaymentForm.orderId),
+        tableId: null,
+        tableName: 'N/A',
+        amount: parseFloat(addPaymentForm.amount),
+        paymentMethod: addPaymentForm.paymentMethod,
+        paymentStatus: 'Paid',
+        transactionId: addPaymentForm.transactionId || `TXN${Date.now()}`,
+        date: new Date().toLocaleDateString('en-IN'),
+        time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        createdAt: new Date()
       }
 
-      // If order not found, still allow payment creation but warn user
-      if (!orderDetails) {
-        const confirmCreate = window.confirm(
-          `Order ID "${addPaymentForm.orderId}" not found in current orders. ` +
-          `Do you want to create payment anyway? This might fail if the order doesn't exist in the database.`
-        );
-        if (!confirmCreate) {
-          return;
-        }
-      }
-
-      const paymentId = `PAY${Date.now()}${Math.random().toString(36).substr(2, 9)}`;
-      const paymentData = {
-        id: paymentId,
-        restaurant_id: userId,
-        order_id: addPaymentForm.orderId, // Use the order ID as provided
-        order_number: orderDetails ? orderDetails.order_number : (parseInt(addPaymentForm.orderId) || null),
-        table_id: orderDetails ? orderDetails.table_id : null,
-        table_name: orderDetails ? orderDetails.table_name : null,
-        amount: amount,
-        payment_method: addPaymentForm.paymentMethod,
-        payment_status: 'Paid',
-        transaction_id: addPaymentForm.transactionId || `TXN${Date.now()}`,
-        notes: addPaymentForm.notes || null
-      };
-
-      // Make API call to create payment
-      const response = await fetch('http://localhost:8000/createPayment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentData)
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        const createdPayment = responseData.payment;
-        
-        // Format the payment to match the expected structure
-        const formattedPayment = {
-          id: createdPayment.id,
-          orderId: createdPayment.order_id,
-          orderNumber: createdPayment.order_number || createdPayment.order_id,
-          tableId: createdPayment.table_id,
-          tableName: createdPayment.table_name || `T${createdPayment.table_id?.toString().padStart(2, '0') || '00'}`,
-          amount: parseFloat(createdPayment.amount) || 0,
-          paymentMethod: createdPayment.payment_method || 'Cash',
-          paymentStatus: createdPayment.payment_status || 'Paid',
-          transactionId: createdPayment.transaction_id || `TXN${createdPayment.id}`,
-          date: new Date(createdPayment.created_at).toLocaleDateString('en-IN'),
-          time: new Date(createdPayment.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-          createdAt: new Date(createdPayment.created_at)
-        };
-
-        // Check if payment is from today
-        const { start, end } = getTodayRange();
-        const paymentDate = new Date(createdPayment.created_at);
-        
-        // Only add to list if it's from today
-        if (paymentDate >= start && paymentDate <= end) {
-          // Add to payments list
-          setPayments(prev => [formattedPayment, ...prev]);
-        } else {
-          // If not from today, trigger a refresh to get all payments
-          setRefreshPayments(prev => prev + 1);
-        }
-        
-        setShowAddPaymentModal(false)
-        setAddPaymentForm({
-          orderId: '',
-          amount: '',
-          paymentMethod: 'Cash',
-          transactionId: '',
-          notes: ''
-        })
-        alert('Payment added successfully!')
-      } else {
-        console.error('Error adding payment:', responseData);
-        const errorMessage = responseData.details 
-          ? `${responseData.error || 'Failed to add payment'}: ${responseData.details}`
-          : responseData.error || 'Failed to add payment. Please check that the Order ID exists.';
-        alert(errorMessage);
-      }
+      setPayments(prev => [newPayment, ...prev])
+      setShowAddPaymentModal(false)
+      setAddPaymentForm({
+        orderId: '',
+        amount: '',
+        paymentMethod: 'Cash',
+        transactionId: '',
+        notes: ''
+      })
+      alert('Payment added successfully!')
     } catch (error) {
       console.error('Error adding payment:', error)
       alert('Failed to add payment. Please try again.')

@@ -102,7 +102,7 @@ const Staff = () => {
                 password: addStaffPassword,
                 restaurant_id: userId,
             }
-            const url = 'http://localhost:8000/restaurant_details/addStaff';
+            const url = 'https://eathubbackend-1.onrender.com/restaurant_details/addStaff';
             const options = {
                 method: 'POST',
                 headers: {
@@ -166,7 +166,7 @@ const Staff = () => {
 
         setDeleting(staffId);
         try {
-            const url = `http://localhost:8000/restaurant_details/deleteStaff/${staffId}/${userId}`;
+            const url = `https://eathubbackend-1.onrender.com/restaurant_details/deleteStaff/${staffId}/${userId}`;
             const options = {
                 method: 'DELETE',
                 headers: {
@@ -218,7 +218,7 @@ const Staff = () => {
                 restaurant_id: userId,
             }
             
-            const url = 'http://localhost:8000/restaurant_details/updateStaff';
+            const url = 'https://eathubbackend-1.onrender.com/restaurant_details/updateStaff';
             const options = {
                 method: 'PUT',
                 headers: {

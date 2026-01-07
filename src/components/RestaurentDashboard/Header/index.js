@@ -14,7 +14,6 @@ const Header = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showTableSelectModal, setShowTableSelectModal] = useState(false);
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
 
@@ -75,16 +74,8 @@ const Header = () => {
     <AllInOne.Consumer>
       {
         value => {
-          const {userId, restaurantDetails, tablesData} = value;
+          const {userId, restaurantDetails} = value;
           const {restaurentname} = restaurantDetails;
-          
-          const handleTableSelect = (table) => {
-            setShowTableSelectModal(false);
-            // Navigate to customer dashboard
-            const customerDashboardUrl = `/customerDashboard/${table.id}/${userId}/home`;
-            window.open(customerDashboardUrl, '_blank');
-          };
-          
           return (
             <>
               <header className='dash-header-initial-cont'>
@@ -99,7 +90,8 @@ const Header = () => {
                     <button type='button'>Waiter's Call <span className='dash-h-btn-span'>0</span></button>
                   </div> */}
                   <div className='dash-h-right-c'>
-                    <button className='dash-h-btn' type='button' onClick={() => setShowTableSelectModal(true)}>Customer Dashboard</button>
+                    <ThemeToggle />
+                    <button className='dash-h-btn' type='button'>First</button>
                     <div 
                       className='dash-h-profile-container'
                       onMouseEnter={handleProfileHover}
@@ -170,63 +162,6 @@ const Header = () => {
                         onClick={handleLogoutConfirm}
                       >
                         Logout
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {showTableSelectModal && (
-                <div className='dash-logout-modal-overlay' onClick={() => setShowTableSelectModal(false)}>
-                  <div className='dash-logout-modal' onClick={(e) => e.stopPropagation()}>
-                    <h2 className='dash-logout-modal-title'>Select Table</h2>
-                    <p className='dash-logout-modal-message'>Choose a table to view customer dashboard</p>
-                    <div className='table-select-list' style={{ maxHeight: '400px', overflowY: 'auto', margin: '20px 0' }}>
-                      {tablesData && tablesData.length > 0 ? (
-                        tablesData.map((area) => (
-                          <div key={area.name} style={{ marginBottom: '15px' }}>
-                            <h3 style={{ color: 'var(--main-head-dark-c)', marginBottom: '10px', fontSize: '16px' }}>
-                              {area.name}
-                            </h3>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                              {area.tables && area.tables.length > 0 ? (
-                                area.tables
-                                  .filter(table => table.is_active === 'active')
-                                  .map((table) => (
-                                    <button
-                                      key={table.id}
-                                      type='button'
-                                      className='dash-logout-modal-btn dash-logout-modal-btn-cancel'
-                                      onClick={() => handleTableSelect(table)}
-                                      style={{ 
-                                        margin: '5px',
-                                        padding: '10px 15px',
-                                        cursor: 'pointer',
-                                        minWidth: '80px'
-                                      }}
-                                    >
-                                      {table.name}
-                                    </button>
-                                  ))
-                              ) : (
-                                <p style={{ color: 'var(--text-color)', fontSize: '14px' }}>No active tables</p>
-                              )}
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p style={{ color: 'var(--text-color)', textAlign: 'center', padding: '20px' }}>
-                          No tables available
-                        </p>
-                      )}
-                    </div>
-                    <div className='dash-logout-modal-buttons'>
-                      <button 
-                        type='button' 
-                        className='dash-logout-modal-btn dash-logout-modal-btn-cancel'
-                        onClick={() => setShowTableSelectModal(false)}
-                      >
-                        Cancel
                       </button>
                     </div>
                   </div>

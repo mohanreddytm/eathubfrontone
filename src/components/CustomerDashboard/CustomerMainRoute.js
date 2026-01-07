@@ -26,7 +26,7 @@ const CustomerDashboardWrapper = ({ children }) => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       setMenuItemsStatus(statusOne.LOADING)
-      const url = `https://ttbackone-v48h.onrender.com/getMenuItems/${restaurantId}`;
+      const url = `https://eathubbackend-1.onrender.com/getMenuItems/${restaurantId}`;
       const res = await fetch(url);
       if (res.ok){
         setMenuItems(await res.json())
@@ -37,7 +37,7 @@ const CustomerDashboardWrapper = ({ children }) => {
     };
 
     const fetchRestaurantDetails = async () => {
-      const url = `https://ttbackone-v48h.onrender.com/restaurant/${restaurantId}`;
+      const url = `https://eathubbackend-1.onrender.com/restaurant/${restaurantId}`;
       const res = await fetch(url);
       if (res.ok) {
         const json = await res.json();
@@ -48,7 +48,7 @@ const CustomerDashboardWrapper = ({ children }) => {
     const fetchTableName = async () => {
       console.log("fetching table name", tableId)
       setTableNameStatus(statusOne.LOADING)
-      const url = `https://ttbackone-v48h.onrender.com/getTableName/${tableId}/`;
+      const url = `https://eathubbackend-1.onrender.com/getTableName/${tableId}/`;
       const response = await fetch(url);
       if(response.ok){
         setTableNameStatus(statusOne.SUCCESS)
@@ -64,7 +64,7 @@ const CustomerDashboardWrapper = ({ children }) => {
     }
 
     const getMenuCategoris = async () => {
-      const url = `https://ttbackone-v48h.onrender.com/restaurant_details/getMenuCategory/${restaurantId}`;
+      const url = `https://eathubbackend-1.onrender.com/restaurant_details/getMenuCategory/${restaurantId}`;
       const response = await fetch(url);
       if(response.ok){
         const json = await response.json();

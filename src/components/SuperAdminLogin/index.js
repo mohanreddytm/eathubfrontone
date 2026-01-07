@@ -29,7 +29,7 @@ const SuperAdminLogin = () => {
                 }
 
                 // Verify token with backend by calling protected endpoint
-                const verifyResponse = await fetch('http://localhost:8000/superAdmin/getAllRestaurants', {
+                const verifyResponse = await fetch('https://eathubbackend-1.onrender.com/superAdmin/getAllRestaurants', {
                     method: 'GET',
                     credentials: 'include', // Send HttpOnly cookie if it exists
                     headers: {
@@ -68,7 +68,7 @@ const SuperAdminLogin = () => {
         if (email && password) {
             setIsLoading(true);
             setGetError(false);
-            const url = "http://localhost:8000/superAdminLogin";
+            const url = "https://eathubbackend-1.onrender.com/superAdminLogin";
             const options = {
                 method: 'POST',
                 headers: {

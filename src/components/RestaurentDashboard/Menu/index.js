@@ -136,7 +136,7 @@ const MenuPage = () => {
             restaurant_id: userId
         }
 
-        const url = "https://ttbackone-v48h.onrender.com/restaurant_details/updateMenuItem"
+        const url = "https://eathubbackend-1.onrender.com/restaurant_details/updateMenuItem"
         const options = {
             method:"PUT",
             headers:{
@@ -157,7 +157,7 @@ const MenuPage = () => {
     }
 
     const onClickdeleteBtn = async (id, one, restaurant_id) => {
-        const url = `https://ttbackone-v48h.onrender.com/deleteMenuItem/${id}/${restaurant_id}`;
+        const url = `https://eathubbackend-1.onrender.com/deleteMenuItem/${id}/${restaurant_id}`;
         const options = {
             method: "DELETE",
             headers: {
@@ -192,7 +192,7 @@ const MenuPage = () => {
             restaurant_id: userId,
         }];
 
-        const url = "https://ttbackone-v48h.onrender.com/restaurant_details/addMenuItems"
+        const url = "https://eathubbackend-1.onrender.com/restaurant_details/addMenuItems"
         const options = 
         {
             method: "POST",
@@ -234,7 +234,7 @@ const MenuPage = () => {
             restaurant_id: userId
         }];
 
-        const url = "https://ttbackone-v48h.onrender.com/restaurant_details/addMenuCategory"
+        const url = "https://eathubbackend-1.onrender.com/restaurant_details/addMenuCategory"
         const options = {
             method: "POST",
             headers: {
@@ -290,7 +290,7 @@ const MenuPage = () => {
             return;
         }
 
-        const url = `https://ttbackone-v48h.onrender.com/restaurant_details/updateMenuCategoryName`;
+        const url = `https://eathubbackend-1.onrender.com/restaurant_details/updateMenuCategoryName`;
         const options = {
             method: "PUT",
             headers: {
@@ -349,7 +349,7 @@ const MenuPage = () => {
     }
 
     const onClickDeleteCategory = async (one) => {
-        const url = `https://ttbackone-v48h.onrender.com/deleteMenuCategoryCompletly/${one.id}`;
+        const url = `https://eathubbackend-1.onrender.com/deleteMenuCategoryCompletly/${one.id}`;
         const options = {
             method: "DELETE",
             headers: {

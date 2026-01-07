@@ -1,12 +1,13 @@
 import React from 'react'
 import ComplexCustomer from '../../../complexOneForCustomer'
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeftLong, FaCopyright } from "react-icons/fa6";
 import './index.css'
-import { isCustomerOrder } from '../../../utils/customerOrdersStorage';
+
+const API_BASE_URL = 'https://eathubbackend-1.onrender.com';
 
 const OrderOne = () => {
     const navigate = useNavigate();
@@ -17,77 +18,74 @@ const OrderOne = () => {
     const [requestSuccess, setRequestSuccess] = useState(false);
     const [showPaymentPopup, setShowPaymentPopup] = useState(false);
     const [showUPIPopup, setShowUPIPopup] = useState(false);
-    const [showPaymentStatusScreen, setShowPaymentStatusScreen] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('');
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState('Pending');
     const [restaurantPaymentSettings, setRestaurantPaymentSettings] = useState(null);
-    const [currentPaymentId, setCurrentPaymentId] = useState(null);
-    const [restaurantNameFull, setRestaurantNameFull] = useState('');
 
-    useEffect(() => {
-        const getOrderDetails = async () => {
-            let currentOrderId = orderId;
-            if(!currentOrderId) {
-                currentOrderId = localStorage.getItem("orderId");
-            }
-            if(!currentOrderId) {
+    const getResolvedOrderId = useCallback(() => orderId || localStorage.getItem("orderId"), [orderId]);
+
+    const fetchOrderDetails = useCallback(async (silent = false) => {
+        const resolvedOrderId = getResolvedOrderId();
+        if(!resolvedOrderId) {
+            if (!silent) {
                 console.error("No order ID available");
-                return;
             }
-            
-            // Verify this order belongs to the customer
-            if (!isCustomerOrder(currentOrderId)) {
-                console.error("Order does not belong to this customer");
-                alert("You don't have access to this order.");
-                navigate(`/customerDashboard/${tableId}/${restaurantId}/home`);
-                return;
-            }
-            
-            try {
-                const url = `http://localhost:8000/getOrderDetails/${currentOrderId}`;
-                const response = await fetch(url);
-                if(response.ok) {
-                    const data = await response.json();
-                    console.log(data)
-                    if(data.order && data.order.length > 0) {
-                        const order = data.order[0];
-                        // Parse items if they are a string
-                        if(order.items && typeof order.items === 'string') {
-                            try {
-                                order.items = JSON.parse(order.items);
-                            } catch(e) {
-                                console.error('Error parsing items:', e);
-                                order.items = [];
-                            }
-                        }
-                        setOrderDetails(order);
-                        
-                        // Check payment status
-                        if(order.payment_status) {
-                            setPaymentStatus(order.payment_status);
+            return;
+        }
+        try {
+            const url = `${API_BASE_URL}/getOrderDetails/${resolvedOrderId}`;
+            const response = await fetch(url);
+            if(response.ok) {
+                const data = await response.json();
+                if(data.order && data.order.length > 0) {
+                    const order = data.order[0];
+                    // Parse items if they are a string
+                    if(order.items && typeof order.items === 'string') {
+                        try {
+                            order.items = JSON.parse(order.items);
+                        } catch(e) {
+                            console.error('Error parsing items:', e);
+                            order.items = [];
                         }
                     }
-                } else {
-                    const errorData = await response.json().catch(() => ({}));
-                    console.log("Failed to fetch order details", errorData);
+                    setOrderDetails(order);
+                    
+                    // Check payment status
+                    if(order.payment_status) {
+                        setPaymentStatus(order.payment_status);
+                    }
+                }
+            } else {
+                const errorData = await response.json().catch(() => ({}));
+                console.log("Failed to fetch order details", errorData);
+                if (!silent) {
                     alert("Failed to fetch order details. Please try again.");
                 }
-            } catch(error) {
-                console.error("Error fetching order details:", error);
+            }
+        } catch(error) {
+            console.error("Error fetching order details:", error);
+            if (!silent) {
                 alert("Failed to fetch order details. Please check your connection.");
             }
         }
-            
-        getOrderDetails();
-    }, [orderId, tableId, restaurantId, navigate]);
+    }, [getResolvedOrderId]);
+
+    useEffect(() => {
+        fetchOrderDetails();
+    }, [fetchOrderDetails]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => fetchOrderDetails(true), 10000);
+        return () => clearInterval(intervalId);
+    }, [fetchOrderDetails]);
 
     // Fetch restaurant payment settings
     useEffect(() => {
         const fetchPaymentSettings = async () => {
             if (!restaurantId) return;
             try {
-                const response = await fetch(`http://localhost:8000/getPaymentSettings/${restaurantId}`);
+                const response = await fetch(`${API_BASE_URL}/getPaymentSettings/${restaurantId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setRestaurantPaymentSettings(data.settings);
@@ -98,72 +96,6 @@ const OrderOne = () => {
         };
         fetchPaymentSettings();
     }, [restaurantId]);
-
-    // Fetch restaurant name
-    useEffect(() => {
-        const fetchRestaurantName = async () => {
-            if (!restaurantId) return;
-            try {
-                const response = await fetch(`http://localhost:8000/restaurant/${restaurantId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.length > 0) {
-                        setRestaurantNameFull(data[0].restaurentname || restaurantName || 'Restaurant');
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching restaurant name:', error);
-                setRestaurantNameFull(restaurantName || 'Restaurant');
-            }
-        };
-        fetchRestaurantName();
-    }, [restaurantId, restaurantName]);
-
-    // Poll for payment status updates
-    useEffect(() => {
-        if (!currentPaymentId || !showPaymentStatusScreen) return;
-
-        const pollPaymentStatus = async () => {
-            try {
-                const response = await fetch(`http://localhost:8000/getPayment/${currentPaymentId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    const payment = data.payment;
-                    
-                    if (payment.payment_status === 'SUCCESS') {
-                        setPaymentStatus('Paid');
-                        setPaymentMethod('Online');
-                        setShowPaymentStatusScreen(false);
-                        // Refresh order details
-                        const refreshResponse = await fetch(`http://localhost:8000/getOrderDetails/${orderId}`);
-                        if (refreshResponse.ok) {
-                            const refreshData = await refreshResponse.json();
-                            if (refreshData.order && refreshData.order.length > 0) {
-                                const order = refreshData.order[0];
-                                if (order.items && typeof order.items === 'string') {
-                                    try {
-                                        order.items = JSON.parse(order.items);
-                                    } catch(e) {
-                                        order.items = [];
-                                    }
-                                }
-                                setOrderDetails(order);
-                            }
-                        }
-                    } else if (payment.payment_status === 'FAILED') {
-                        setPaymentStatus('Pending');
-                        setShowPaymentStatusScreen(false);
-                        alert('Payment was marked as failed by the restaurant. Please try again.');
-                    }
-                }
-            } catch (error) {
-                console.error('Error polling payment status:', error);
-            }
-        };
-
-        const interval = setInterval(pollPaymentStatus, 3000); // Poll every 3 seconds
-        return () => clearInterval(interval);
-    }, [currentPaymentId, showPaymentStatusScreen, orderId]);
 
     const handleCallWaiter = async () => {
         if (!restaurantId || !tableId) {
@@ -183,7 +115,7 @@ const OrderOne = () => {
                 notes: 'Customer requested waiter assistance from order details page'
             }
 
-            const response = await fetch('http://localhost:8000/createWaiterRequest', {
+            const response = await fetch(`${API_BASE_URL}/createWaiterRequest`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -260,7 +192,8 @@ const OrderOne = () => {
     }
 
     const handlePayment = async (method) => {
-        if (!orderDetails || !orderId) {
+        const resolvedOrderId = getResolvedOrderId();
+        if (!orderDetails || !resolvedOrderId) {
             alert('Order details not available. Please refresh the page.');
             return;
         }
@@ -275,7 +208,7 @@ const OrderOne = () => {
                 const paymentData = {
                     id: paymentId,
                     restaurant_id: restaurantId,
-                    order_id: orderId,
+                    order_id: resolvedOrderId,
                     order_number: orderDetails.order_number,
                     table_id: tableId,
                     table_name: orderDetails.table_name,
@@ -286,7 +219,7 @@ const OrderOne = () => {
                     notes: 'Payment pending - customer will pay cash to waiter'
                 };
 
-                const response = await fetch('http://localhost:8000/createPayment', {
+                const response = await fetch(`${API_BASE_URL}/createPayment`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -300,7 +233,7 @@ const OrderOne = () => {
                     setShowPaymentPopup(false);
                     
                     // Update order payment status
-                    await fetch(`http://localhost:8000/updateOrderPaymentStatus/${orderId}`, {
+                    await fetch(`${API_BASE_URL}/updateOrderPaymentStatus/${resolvedOrderId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -309,7 +242,7 @@ const OrderOne = () => {
                     });
                     
                     // Refresh order details
-                    const refreshResponse = await fetch(`http://localhost:8000/getOrderDetails/${orderId}`);
+                    const refreshResponse = await fetch(`${API_BASE_URL}/getOrderDetails/${resolvedOrderId}`);
                     if (refreshResponse.ok) {
                         const refreshData = await refreshResponse.json();
                         if (refreshData.order && refreshData.order.length > 0) {
@@ -334,15 +267,16 @@ const OrderOne = () => {
             } finally {
                 setPaymentLoading(false);
             }
-        } else if (method === 'Online') {
-            // For online payment, show UPI payment options
+        } else if (method === 'UPI') {
+            // For UPI, show UPI payment options
             setShowPaymentPopup(false);
             setShowUPIPopup(true);
         }
     }
 
-    const handlePayOnline = async (upiId) => {
-        if (!orderDetails || !orderId || !restaurantId) {
+    const handleUPIPayment = async (upiId) => {
+        const resolvedOrderId = getResolvedOrderId();
+        if (!orderDetails || !resolvedOrderId) {
             alert('Order details not available. Please refresh the page.');
             return;
         }
@@ -352,7 +286,6 @@ const OrderOne = () => {
             const paymentId = uuidv4();
             const totalAmount = calculateTotal();
 
-            // Create payment with INITIATED status
             const paymentData = {
                 id: paymentId,
                 restaurant_id: restaurantId,
@@ -361,10 +294,13 @@ const OrderOne = () => {
                 table_id: tableId,
                 table_name: orderDetails.table_name,
                 amount: totalAmount,
-                upi_id: upiId
+                payment_method: 'UPI',
+                payment_status: 'Paid',
+                transaction_id: `UPI${Date.now()}`,
+                notes: `Payment via UPI: ${upiId}`
             };
 
-            const createPaymentResponse = await fetch('http://localhost:8000/createUPIPayment', {
+            const response = await fetch(`${API_BASE_URL}/createPayment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -372,130 +308,56 @@ const OrderOne = () => {
                 body: JSON.stringify(paymentData)
             });
 
-            if (!createPaymentResponse.ok) {
-                const errorData = await createPaymentResponse.json();
-                throw new Error(errorData.error || 'Failed to initiate payment');
-            }
-
-            // Generate UPI intent URL
-            const intentResponse = await fetch('http://localhost:8000/generateUPIIntent', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    upi_id: upiId,
-                    restaurant_name: restaurantNameFull,
-                    amount: totalAmount,
-                    order_id: orderId
-                })
-            });
-
-            if (!intentResponse.ok) {
-                throw new Error('Failed to generate UPI intent');
-            }
-
-            const intentData = await intentResponse.json();
-            const upiIntentUrl = intentData.upi_intent_url;
-
-            // Store payment ID for status polling
-            setCurrentPaymentId(paymentId);
-            setShowUPIPopup(false);
-            setShowPaymentStatusScreen(true);
-
-            // Redirect to UPI app
-            window.location.href = upiIntentUrl;
-        } catch (error) {
-            console.error('Error initiating UPI payment:', error);
-            alert(error.message || 'Failed to initiate payment. Please try again.');
-            setPaymentLoading(false);
-        }
-    }
-
-    const handleConfirmPayment = async () => {
-        if (!currentPaymentId) return;
-
-        setPaymentLoading(true);
-        try {
-            const response = await fetch(`http://localhost:8000/confirmPaymentPending/${currentPaymentId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
             if (response.ok) {
-                setPaymentStatus('Pending');
-                setPaymentMethod('Online');
-                setShowPaymentStatusScreen(false);
-                alert('Payment confirmation sent to restaurant. Waiting for restaurant confirmation...');
+                const responseData = await response.json();
+                setPaymentStatus('Paid');
+                setPaymentMethod('UPI');
+                setShowUPIPopup(false);
                 
-                // Start polling for status update
-                const pollInterval = setInterval(async () => {
-                    try {
-                        const statusResponse = await fetch(`http://localhost:8000/getPayment/${currentPaymentId}`);
-                        if (statusResponse.ok) {
-                            const data = await statusResponse.json();
-                            const payment = data.payment;
-                            
-                            if (payment.payment_status === 'SUCCESS') {
-                                clearInterval(pollInterval);
-                                setPaymentStatus('Paid');
-                                // Refresh order details
-                                const refreshResponse = await fetch(`http://localhost:8000/getOrderDetails/${orderId}`);
-                                if (refreshResponse.ok) {
-                                    const refreshData = await refreshResponse.json();
-                                    if (refreshData.order && refreshData.order.length > 0) {
-                                        const order = refreshData.order[0];
-                                        if (order.items && typeof order.items === 'string') {
-                                            try {
-                                                order.items = JSON.parse(order.items);
-                                            } catch(e) {
-                                                order.items = [];
-                                            }
-                                        }
-                                        setOrderDetails(order);
-                                    }
+                // Update order payment status
+                const updateResponse = await fetch(`${API_BASE_URL}/updateOrderPaymentStatus/${resolvedOrderId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ payment_status: 'Paid', payment_method: 'UPI' })
+                });
+                
+                if (updateResponse.ok) {
+                    // Refresh order details
+                    const refreshResponse = await fetch(`${API_BASE_URL}/getOrderDetails/${resolvedOrderId}`);
+                    if (refreshResponse.ok) {
+                        const refreshData = await refreshResponse.json();
+                        if (refreshData.order && refreshData.order.length > 0) {
+                            const order = refreshData.order[0];
+                            if (order.items && typeof order.items === 'string') {
+                                try {
+                                    order.items = JSON.parse(order.items);
+                                } catch(e) {
+                                    order.items = [];
                                 }
-                                alert('Payment confirmed successfully!');
-                            } else if (payment.payment_status === 'FAILED') {
-                                clearInterval(pollInterval);
-                                setPaymentStatus('Pending');
-                                alert('Payment was marked as failed by the restaurant. Please try again.');
                             }
+                            setOrderDetails(order);
                         }
-                    } catch (error) {
-                        console.error('Error polling payment status:', error);
                     }
-                }, 3000);
-
-                // Stop polling after 5 minutes
-                setTimeout(() => clearInterval(pollInterval), 300000);
+                }
+                alert(`Payment successful via UPI! Transaction ID: ${paymentData.transaction_id}`);
             } else {
                 const errorData = await response.json();
-                alert(errorData.error || 'Failed to confirm payment. Please try again.');
+                alert(errorData.error || 'Payment failed. Please try again.');
             }
         } catch (error) {
-            console.error('Error confirming payment:', error);
-            alert('Failed to confirm payment. Please try again.');
+            console.error('Error processing UPI payment:', error);
+            alert('Payment failed. Please check your connection and try again.');
         } finally {
             setPaymentLoading(false);
         }
-    }
-
-    const handleCancelPayment = () => {
-        setShowPaymentStatusScreen(false);
-        setCurrentPaymentId(null);
-        setPaymentLoading(false);
     }
 
     const paymentPopup = () => {
         if (!orderDetails) return null;
         
         const totalAmount = calculateTotal();
-        const isOnlinePaymentEnabled = restaurantPaymentSettings?.paymentMethods?.online === true;
-        const hasUPIIds = restaurantPaymentSettings?.upi_ids && restaurantPaymentSettings.upi_ids.length > 0;
-        const canPayOnline = isOnlinePaymentEnabled && hasUPIIds;
 
         return (
             <div className='payment-popup-main-cont'>
@@ -503,15 +365,13 @@ const OrderOne = () => {
                     <h1>Make Payment</h1>
                     <p className='payment-popup-total'>Total Amount: ₹{totalAmount.toFixed(2)}</p>
                     <div className='payment-popup-methods'>
-                        {canPayOnline ? (
-                            <button 
-                                className='payment-method-button upi-button'
-                                onClick={() => handlePayment('Online')}
-                                disabled={paymentLoading}
-                            >
-                                Pay Online
-                            </button>
-                        ) : null}
+                        <button 
+                            className='payment-method-button upi-button'
+                            onClick={() => handlePayment('UPI')}
+                            disabled={paymentLoading}
+                        >
+                            Pay Using UPI
+                        </button>
                         <button 
                             className='payment-method-button cash-button'
                             onClick={() => handlePayment('Cash')}
@@ -520,11 +380,6 @@ const OrderOne = () => {
                             Pay Cash to Waiter
                         </button>
                     </div>
-                    {!canPayOnline && (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '12px', textAlign: 'center', marginTop: '10px' }}>
-                            Online payment is not available. Please pay cash to waiter.
-                        </p>
-                    )}
                     <button 
                         className='payment-popup-cancel'
                         onClick={() => setShowPaymentPopup(false)}
@@ -547,7 +402,7 @@ const OrderOne = () => {
         return (
             <div className='payment-popup-main-cont'>
                 <div className='payment-popup-inner-cont upi-popup-inner'>
-                    <h1>Pay Online</h1>
+                    <h1>Pay Using UPI</h1>
                     <p className='payment-popup-total'>Total Amount: ₹{totalAmount.toFixed(2)}</p>
                     {upiOptions.length > 0 ? (
                         <>
@@ -557,7 +412,7 @@ const OrderOne = () => {
                                     <button 
                                         key={index}
                                         className='payment-method-button upi-option-button'
-                                        onClick={() => handlePayOnline(upi.upi_id)}
+                                        onClick={() => handleUPIPayment(upi.upi_id)}
                                         disabled={paymentLoading}
                                     >
                                         <span className='upi-option-name'>{upi.name || 'UPI Payment'}</span>
@@ -583,40 +438,6 @@ const OrderOne = () => {
                         Back
                     </button>
                     {paymentLoading && <p className='payment-loading'>Processing payment...</p>}
-                </div>
-            </div>
-        );
-    }
-
-    const paymentStatusScreen = () => {
-        if (!orderDetails) return null;
-
-        return (
-            <div className='payment-popup-main-cont'>
-                <div className='payment-popup-inner-cont payment-status-screen'>
-                    <h1>Payment Status</h1>
-                    <p className='payment-popup-total'>Amount: ₹{calculateTotal().toFixed(2)}</p>
-                    <div className='payment-status-message'>
-                        <p>Have you completed the payment in your UPI app?</p>
-                        <p className='payment-status-hint'>Please confirm after completing the payment.</p>
-                    </div>
-                    <div className='payment-status-buttons'>
-                        <button 
-                            className='payment-method-button success-button'
-                            onClick={handleConfirmPayment}
-                            disabled={paymentLoading}
-                        >
-                            I Have Paid
-                        </button>
-                        <button 
-                            className='payment-popup-cancel'
-                            onClick={handleCancelPayment}
-                            disabled={paymentLoading}
-                        >
-                            Cancel Payment
-                        </button>
-                    </div>
-                    {paymentLoading && <p className='payment-loading'>Processing...</p>}
                 </div>
             </div>
         );
@@ -659,7 +480,6 @@ const OrderOne = () => {
         {callWaiterOne && callWaiterPopup()}
         {showPaymentPopup && paymentPopup()}
         {showUPIPopup && upiPaymentPopup()}
-        {showPaymentStatusScreen && paymentStatusScreen()}
         <div className='customer-main-title-cont'>
             <h1 className='customer-main-title'><span>A</span>{restaurantName}</h1>
         </div>
@@ -773,24 +593,10 @@ const OrderOne = () => {
                                 </>
                             ) : (
                                 <>
-                                    {(() => {
-                                        const isOnlinePaymentEnabled = restaurantPaymentSettings?.paymentMethods?.online === true;
-                                        const hasUPIIds = restaurantPaymentSettings?.upi_ids && restaurantPaymentSettings.upi_ids.length > 0;
-                                        const canPayOnline = isOnlinePaymentEnabled && hasUPIIds;
-                                        
-                                        return (
-                                            <>
-                                                <button onClick={() => setShowPaymentPopup(true)} disabled={paymentLoading}>
-                                                    Make Payment
-                                                </button>
-                                                {canPayOnline ? (
-                                                    <p>( or ) You Can Pay cash to the waiter.</p>
-                                                ) : (
-                                                    <p>Please pay cash to the waiter.</p>
-                                                )}
-                                            </>
-                                        );
-                                    })()}
+                                    <button onClick={() => setShowPaymentPopup(true)} disabled={paymentLoading}>
+                                        Make Payment
+                                    </button>
+                                    <p>( or ) You Can Pay cash to the waiter.</p>
                                 </>
                             )}
                         </div>

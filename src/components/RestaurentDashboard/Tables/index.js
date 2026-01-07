@@ -154,7 +154,7 @@ const Tables = () => {
 
                 console.log(updatedTableData)
 
-                const url = "https://ttbackone-v48h.onrender.com/restaurant_details/updateTable";
+                const url = "https://eathubbackend-1.onrender.com/restaurant_details/updateTable";
                 const options = {
                     method: 'PUT',
                     headers: {
@@ -192,7 +192,7 @@ const Tables = () => {
 
                 console.log(newTableData)
 
-                const url = "https://ttbackone-v48h.onrender.com/restaurant_details/addTable";
+                const url = "https://eathubbackend-1.onrender.com/restaurant_details/addTable";
                 const options = {
                     method: 'POST',
                     headers: {
@@ -231,7 +231,7 @@ const Tables = () => {
     }
 
     const onClickDeleteBtn = async (one) => {
-        const url = `https://ttbackone-v48h.onrender.com/deleteTable/${one.id}/${one.restaurant_id}`;
+        const url = `https://eathubbackend-1.onrender.com/deleteTable/${one.id}/${one.restaurant_id}`;
         const options = {
             method:"DELETE"
         }
@@ -292,7 +292,7 @@ const Tables = () => {
                 restaurant_id: userId
             }];
 
-            const url = "https://ttbackone-v48h.onrender.com/restaurant_details/addAreas";
+            const url = "https://eathubbackend-1.onrender.com/restaurant_details/addAreas";
             const options = {
                 method: 'POST',
                 headers: {
@@ -315,7 +315,7 @@ const Tables = () => {
     const onClickDeleteArea = async () => {
         if(deleteAreaId !== null){
             setDeleteAreaLoading(true);
-            const url = `https://ttbackone-v48h.onrender.com/deleteArea/${deleteAreaId.area.id}/${userId}`;
+            const url = `https://eathubbackend-1.onrender.com/deleteArea/${deleteAreaId.area.id}/${userId}`;
             const options = {
                 method: 'DELETE'
             };
@@ -342,7 +342,7 @@ const Tables = () => {
                 restaurant_id: onEditAreaOne.restaurant_id
             };
             console.log(areaOne)
-            const url = `https://ttbackone-v48h.onrender.com/restaurant_details/updateArea`;
+            const url = `https://eathubbackend-1.onrender.com/restaurant_details/updateArea`;
             const options = {
                 method: 'PUT',
                 headers: {

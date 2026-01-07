@@ -26,7 +26,7 @@ const SuperAdminDashboard = () => {
             try {
                 // Try to get token from cookie (non-httpOnly) for Authorization header
                 const token = Cookies.get('sa_user');
-                const res = await fetch('http://localhost:8000/superAdmin/getAllRestaurants', {
+                const res = await fetch('https://eathubbackend-1.onrender.com/superAdmin/getAllRestaurants', {
                     method: 'GET',
                     credentials: 'include', // This sends the httpOnly cookie
                     headers: {
@@ -68,7 +68,7 @@ const SuperAdminDashboard = () => {
         try {
             // Try to get token from cookie (non-httpOnly) for Authorization header
             const token = Cookies.get('sa_user');
-            const res = await fetch('http://localhost:8000/superAdmin/getAllRestaurants', {
+            const res = await fetch('https://eathubbackend-1.onrender.com/superAdmin/getAllRestaurants', {
                 method: 'GET',
                 credentials: 'include', // This sends the httpOnly cookie
                 headers: {
@@ -96,7 +96,7 @@ const SuperAdminDashboard = () => {
         setUpdating(restaurantId);
         try {
             const token = Cookies.get('sa_user');
-            const res = await fetch(`http://localhost:8000/superAdmin/updateRestaurantStatus/${restaurantId}`, {
+            const res = await fetch(`https://eathubbackend-1.onrender.com/superAdmin/updateRestaurantStatus/${restaurantId}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
@@ -122,7 +122,7 @@ const SuperAdminDashboard = () => {
         setUpdating(restaurantId);
         try {
             const token = Cookies.get('sa_user');
-            const res = await fetch(`http://localhost:8000/superAdmin/updateRestaurantStatus/${restaurantId}`, {
+            const res = await fetch(`https://eathubbackend-1.onrender.com/superAdmin/updateRestaurantStatus/${restaurantId}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
@@ -151,7 +151,7 @@ const SuperAdminDashboard = () => {
         setDeleting(restaurantId);
         try {
             const token = Cookies.get('sa_user');
-            const res = await fetch(`http://localhost:8000/superAdmin/deleteRestaurant/${restaurantId}`, {
+            const res = await fetch(`https://eathubbackend-1.onrender.com/superAdmin/deleteRestaurant/${restaurantId}`, {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
@@ -177,7 +177,7 @@ const SuperAdminDashboard = () => {
         setLoadingStats(true);
         try {
             const token = Cookies.get('sa_user');
-            const res = await fetch(`http://localhost:8000/superAdmin/getRestaurantStats/${restaurant.id}`, {
+            const res = await fetch(`https://eathubbackend-1.onrender.com/superAdmin/getRestaurantStats/${restaurant.id}`, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
@@ -201,7 +201,7 @@ const SuperAdminDashboard = () => {
             const token = Cookies.get('sa_user');
             
             // Call backend logout endpoint to clear HttpOnly cookie
-            await fetch('http://localhost:8000/superAdmin/logout', {
+            await fetch('https://eathubbackend-1.onrender.com/superAdmin/logout', {
                 method: 'POST',
                 credentials: 'include', // Send HttpOnly cookie
                 headers: {

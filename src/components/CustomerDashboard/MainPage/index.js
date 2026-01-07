@@ -95,7 +95,7 @@ const MainPage = () => {
         }
 
         // Fetch orders for this table
-        const response = await fetch(`http://localhost:8000/getOrdersByTable/${tableId}`);
+        const response = await fetch(`https://eathubbackend-1.onrender.com/getOrdersByTable/${tableId}`);
         if (response.ok) {
           const data = await response.json();
           // Get all active orders for this table
@@ -178,7 +178,7 @@ const MainPage = () => {
         notes: 'Customer requested waiter assistance'
       }
 
-      const response = await fetch('http://localhost:8000/createWaiterRequest', {
+      const response = await fetch('https://eathubbackend-1.onrender.com/createWaiterRequest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

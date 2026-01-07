@@ -57,7 +57,7 @@ const RestaurantLogin = () => {
         if(loginEmail && loginPassword) {
             setIsLoading(true);
             setGetError(false);
-            const url = "http://localhost:8000/restaurant/waiterLogin"
+            const url = "https://eathubbackend-1.onrender.com/restaurant/waiterLogin"
             const options = {
                 method: 'POST',
                 headers: {
@@ -99,7 +99,7 @@ const RestaurantLogin = () => {
         if(loginEmail && loginPassword) {
             setIsLoading(true);
             setGetError(false);
-            const url = "http://localhost:8000/restaurant/kotLogin"
+            const url = "https://eathubbackend-1.onrender.com/restaurant/kotLogin"
             const options = {
                 method: 'POST',
                 headers: {
@@ -140,7 +140,7 @@ const RestaurantLogin = () => {
         if(loginEmail && loginPassword) {
             setIsLoading(true);
             setGetError(false);
-            const url = "https://ttbackone-v48h.onrender.com/restaurantLogin"
+            const url = "https://eathubbackend-1.onrender.com/restaurantLogin"
             const options = {
                 method: 'POST',
                 headers: {

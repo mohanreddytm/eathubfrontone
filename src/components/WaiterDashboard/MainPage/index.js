@@ -79,7 +79,7 @@ const MainPage = () => {
   const fetchMenuItems = async () => {
     setMenuItemsStatus('PENDING');
     try {
-      const url = `http://localhost:8000/getMenuItems/${restaurantId}`;
+      const url = `https://eathubbackend-1.onrender.com/getMenuItems/${restaurantId}`;
       const response = await fetch(url);
       if(response.ok){
         const data = await response.json();
@@ -96,7 +96,7 @@ const MainPage = () => {
 
   const fetchMenuCategories = async () => {
     try {
-      const url = `http://localhost:8000/restaurant_details/getMenuCategory/${restaurantId}`;
+      const url = `https://eathubbackend-1.onrender.com/restaurant_details/getMenuCategory/${restaurantId}`;
       const response = await fetch(url);
       if(response.ok){
         const data = await response.json();
@@ -175,7 +175,7 @@ const MainPage = () => {
     }
 
     try {
-      const url = "http://localhost:8000/addNewOrder";
+      const url = "https://eathubbackend-1.onrender.com/addNewOrder";
       const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
       
       const orderData = {
@@ -313,7 +313,7 @@ const MainPage = () => {
     if (!waiterId) return;
 
     try {
-      await fetch(`http://localhost:8000/updateWaiterStatus/${waiterId}`, {
+      await fetch(`https://eathubbackend-1.onrender.com/updateWaiterStatus/${waiterId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
@@ -329,7 +329,7 @@ const MainPage = () => {
     // After 2 minutes, set back to available
     statusTimeoutRef.current = setTimeout(async () => {
       try {
-        await fetch(`http://localhost:8000/updateWaiterStatus/${waiterId}`, {
+        await fetch(`https://eathubbackend-1.onrender.com/updateWaiterStatus/${waiterId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status: 'available' })
@@ -343,7 +343,7 @@ const MainPage = () => {
   const updateAdminCallStatus = async (callId, status, waiterStatusForDuration) => {
     setUpdatingCall(true);
     try {
-      const res = await fetch(`http://localhost:8000/updateAdminCallStatus/${callId}`, {
+      const res = await fetch(`https://eathubbackend-1.onrender.com/updateAdminCallStatus/${callId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -383,7 +383,7 @@ const MainPage = () => {
       setChatLoading(true);
     }
     try {
-      const res = await fetch(`http://localhost:8000/restaurant_messages/${restaurantId}`);
+      const res = await fetch(`https://eathubbackend-1.onrender.com/restaurant_messages/${restaurantId}`);
       if (res.ok) {
         const data = await res.json();
         setChatMessages(Array.isArray(data.messages) ? data.messages : []);
@@ -429,7 +429,7 @@ const MainPage = () => {
         sender_name: waiterDetails ? waiterDetails.name : 'Waiter',
         message: chatInput.trim(),
       };
-      const res = await fetch('http://localhost:8000/restaurant_messages', {
+      const res = await fetch('https://eathubbackend-1.onrender.com/restaurant_messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

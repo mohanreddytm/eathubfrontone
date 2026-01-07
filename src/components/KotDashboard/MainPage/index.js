@@ -4,6 +4,9 @@ import Cookies from 'js-cookie';
 import { FaSignOutAlt, FaQuestionCircle, FaTimes } from 'react-icons/fa';
 import complexKot from '../../../complexKot';
 import './index.css';
+import ThemeToggle from '../../ThemeToggle';
+
+
 
 const KotMainPage = () => {
   const navigate = useNavigate();
@@ -12,11 +15,12 @@ const KotMainPage = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
 
+
   const updateOrderStatus = async (orderId, newStatus) => {
     if (!orderId || !newStatus) return;
     setUpdatingOrderId(orderId);
     try {
-      const res = await fetch(`http://localhost:8000/updateOrderStatus/${orderId}`, {
+      const res = await fetch(`https://eathubbackend-1.onrender.com/updateOrderStatus/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

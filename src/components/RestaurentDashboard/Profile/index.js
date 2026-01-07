@@ -17,7 +17,7 @@ const Profile = () => {
         setLoading(false)
       } else if (userId) {
         try {
-          const url = `https://ttbackone-v48h.onrender.com/restaurant/${userId}`
+          const url = `https://eathubbackend-1.onrender.com/restaurant/${userId}`
           const response = await fetch(url)
           if (response.ok) {
             const json = await response.json()

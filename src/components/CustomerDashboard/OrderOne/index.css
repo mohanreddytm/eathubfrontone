@@ -3,13 +3,14 @@
     flex-direction: column;
     min-height: 100vh;
     background-color: var(--main-dark-bc);
+    color: var(--text-primary);
 }
 
 .order-one-head-cont{
     padding: 10px 20px;
     display: flex;
     align-items: center;
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     justify-content: space-between;
 }
 
@@ -36,7 +37,7 @@
 }
 
 .order-status-cont h1{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -56,7 +57,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 500;
 }
@@ -64,13 +65,13 @@
 
 
 .order-status-ul li p{
-    color: #deddde;
+    color: var(--text-primary);
     font-size: 14px;
-    background-color: #010f04;
+    background-color: var(--header-dark-bc);
     padding: 4px 8px;
     margin: 0px;
     border-radius: 50%;
-    border: 2px solid var(--glass-br-c);
+    border: 2px solid var(--border-color);
     width: 30px;
     height: 30px;
 }
@@ -101,14 +102,14 @@
 }
 
 .order-details-cont h1{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
 }
 
 .order-details-cont p{
-    color: var(--text-color);
+    color: var(--text-secondary);
     font-size: 10px;
     font-weight: 600;
     margin: 0px;
@@ -155,7 +156,7 @@
 }
 
 .order-item-name{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 16px;
     font-weight: 500;
     margin: 0px;
@@ -164,12 +165,12 @@
 }
 
 .order-items-divider{
-    border: 1px solid var(--glass-br-c);
+    border: 1px solid var(--border-color);
     /* margin: 0px 20px; */
     width: 80%;
 }
 .order-item-price{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 600;
     margin: 0px;
@@ -177,7 +178,7 @@
 }
 
 .order-summary-title{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 18px;
     font-weight: 600;
     margin: 0px 0px 10px 20px;
@@ -194,7 +195,7 @@
     align-items: center;
     justify-content: space-between;
     margin: 6px 0px;
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
 }
 
 .order-summary-cont p span{
@@ -209,7 +210,7 @@
     align-items: center;
     justify-content: space-between;
     margin: 6px 0px;
-    color: rgb(255, 255, 255);
+    color: var(--text-primary);
 
 }
 
@@ -240,7 +241,7 @@
 }
 
 .powered-by-one{
-    color: rgb(200, 199, 199);
+    color: var(--text-secondary);
     font-size: 12px;
     font-weight: 500;
     margin: 10px 0px;
@@ -257,7 +258,7 @@
 }
 
 .payment-details-title{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -291,7 +292,7 @@
 }
 
 .payment-details-cont p{
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 14px;
     font-weight: 500;
     /* margin: 0px; */
@@ -300,7 +301,7 @@
 .payment-status{
     background-color: rgb(255, 193, 7, 0.2);
     border: 1px solid rgb(255, 193, 7);
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     padding: 4px 8px;
     border-radius: 5px;
     font-size: 12px;
@@ -313,7 +314,7 @@
     font-size: 18px;
     align-self: flex-end;
     margin: 0px;
-    color: rgb(255, 255, 255);
+    color: var(--text-primary);
 }
 
 .payment-paid {
@@ -347,13 +348,13 @@
 }
 
 .call-waiter-popup-inner-cont p {
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 16px;
     margin-bottom: 15px;
 }
 
 .call-waiter-popup-inner-cont h1 {
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 18px;
     margin-bottom: 20px;
 }
@@ -434,13 +435,13 @@
 }
 
 .payment-popup-inner-cont h1 {
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 20px;
     margin-bottom: 20px;
 }
 
 .payment-popup-total {
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 25px;
@@ -487,7 +488,7 @@
 
 .payment-popup-cancel {
     background-color: transparent;
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     border: 1px solid var(--glass-br-c);
     padding: 10px 20px;
     border-radius: 5px;
@@ -506,7 +507,7 @@
 }
 
 .payment-loading {
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 14px;
     margin-top: 10px;
 }
@@ -533,7 +534,7 @@
 }
 
 .upi-select-text {
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
     font-size: 14px;
     margin-bottom: 15px;
     text-align: center;
@@ -571,64 +572,9 @@
 .no-upi-message {
     padding: 20px;
     text-align: center;
-    color: rgb(234, 233, 233);
+    color: var(--text-primary);
 }
 
 .no-upi-message p {
     margin: 10px 0;
-}
-
-/* Payment Status Screen */
-.payment-status-screen {
-    max-width: 450px;
-}
-
-.payment-status-message {
-    color: rgb(234, 233, 233);
-    font-size: 16px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.payment-status-hint {
-    color: rgba(234, 233, 233, 0.7);
-    font-size: 14px;
-    margin-bottom: 25px;
-    text-align: center;
-    font-style: italic;
-}
-
-.payment-status-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.payment-status-buttons .success-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 15px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.payment-status-buttons .success-button:hover:not(:disabled) {
-    background-color: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-}
-
-.payment-status-buttons .success-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
 }

@@ -138,7 +138,7 @@ const Dashboard = () => {
         const fetchPayments = async () => {
             if (!userId) return;
             try {
-                const response = await fetch(`http://localhost:8000/getPayments/${userId}`);
+                const response = await fetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setPayments(data.payments || []);
@@ -157,7 +157,7 @@ const Dashboard = () => {
         const fetchPendingPayments = async () => {
             if (!userId) return;
             try {
-                const response = await fetch(`http://localhost:8000/getPendingPayments/${userId}`);
+                const response = await fetch(`https://eathubbackend-1.onrender.com/getPendingPayments/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     const pending = data.payments || [];
@@ -375,7 +375,7 @@ const Dashboard = () => {
         
         setProcessingPayment(true);
         try {
-            const response = await fetch(`http://localhost:8000/updatePaymentStatus/${paymentId}`, {
+            const response = await fetch(`https://eathubbackend-1.onrender.com/updatePaymentStatus/${paymentId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -397,7 +397,7 @@ const Dashboard = () => {
                 }
                 
                 // Refresh payments
-                const refreshResponse = await fetch(`http://localhost:8000/getPayments/${userId}`);
+                const refreshResponse = await fetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
                 if (refreshResponse.ok) {
                     const refreshData = await refreshResponse.json();
                     setPayments(refreshData.payments || []);
