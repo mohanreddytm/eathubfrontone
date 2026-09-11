@@ -1,0 +1,74 @@
+.order-actions {
+  padding: 24px;
+  flex: 1;
+  min-width: 320px;
+  color: var(--text-primary, #eee);
+  background: var(--bg-secondary, #242330);
+  border-radius: 12px;
+}
+.order-actions table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+.order-actions th,
+.order-actions td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #7776;
+}
+.order-action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.order-actions button {
+  padding: 9px 14px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+.order-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.order-action-panel {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #888;
+  border-radius: 8px;
+}
+.order-action-panel label {
+  display: block;
+  margin: 10px 0;
+}
+.order-action-panel input,
+.order-action-panel select {
+  margin: 6px;
+  padding: 7px;
+}
+.order-actions [role="alert"] {
+  color: #ffaaa3;
+}
+#eathub-receipt {
+  background: white;
+  color: #111;
+  padding: 24px;
+  margin: 12px 0;
+}
+@media print {
+  body:has(#eathub-receipt) * {
+    visibility: hidden !important;
+  }
+  body:has(#eathub-receipt) #eathub-receipt,
+  body:has(#eathub-receipt) #eathub-receipt * {
+    visibility: visible !important;
+  }
+  #eathub-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+  }
+}

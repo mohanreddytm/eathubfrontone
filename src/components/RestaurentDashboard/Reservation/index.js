@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { useState, useEffect, useContext } from 'react'
 import './index.css'
 import { FaPhone } from 'react-icons/fa6'
@@ -29,23 +30,18 @@ const Reservation = () => {
     status: 'pending'
   })
 
-  // Get all available tables
-  const getAllTables = () => {
-    if (!tablesData || !Array.isArray(tablesData)) return []
-    const allTables = []
-    tablesData.forEach(area => {
-      if (area.tables && Array.isArray(area.tables)) {
-        area.tables.forEach(table => {
-          allTables.push({
-            id: table.id,
-            name: table.name || `T${table.id?.toString().padStart(2, '0') || '00'}`,
-            areaName: area.name
-          })
-        })
-      }
-    })
-    return allTables
-  }
+  const [availableTables,setAvailableTables]=useState([]);
+  const [availabilityError,setAvailabilityError]=useState('');
+  useEffect(()=>{
+    let active=true;
+    if(!userId||!reservationForm.date||!reservationForm.time){setAvailableTables([]);return;}
+    const params=new URLSearchParams({date:reservationForm.date,time:reservationForm.time});
+    if(editingReservation?.id)params.set('exclude_reservation_id',editingReservation.id);
+    setAvailabilityError('');
+    apiFetch(`https://eathubbackend-1.onrender.com/public/tables/${userId}?${params}`).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error);return d;}).then(d=>{if(active)setAvailableTables(d.tables);}).catch(e=>{if(active){setAvailableTables([]);setAvailabilityError(e.message);}});
+    return ()=>{active=false;};
+  },[userId,reservationForm.date,reservationForm.time,editingReservation?.id]);
+  const getAllTables=()=>availableTables;
 
   // Fetch reservations
   useEffect(() => {
@@ -56,7 +52,7 @@ const Reservation = () => {
       }
 
       try {
-        const response = await fetch(`https://eathubbackend-1.onrender.com/getReservations/${userId}`)
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/getReservations/${userId}`)
         if (response.ok) {
           const data = await response.json()
           // Process reservations to include table name
@@ -147,7 +143,7 @@ const Reservation = () => {
         created_at: new Date().toISOString()
       }
 
-      const response = await fetch('https://eathubbackend-1.onrender.com/addReservation', {
+      const response = await apiFetch('https://eathubbackend-1.onrender.com/addReservation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -231,7 +227,7 @@ const Reservation = () => {
         status: reservationForm.status
       }
 
-      const response = await fetch(`https://eathubbackend-1.onrender.com/updateReservation/${editingReservation.id}`, {
+      const response = await apiFetch(`https://eathubbackend-1.onrender.com/updateReservation/${editingReservation.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -278,7 +274,7 @@ const Reservation = () => {
     }
 
     try {
-      const response = await fetch(`https://eathubbackend-1.onrender.com/deleteReservation/${reservationId}`, {
+      const response = await apiFetch(`https://eathubbackend-1.onrender.com/deleteReservation/${reservationId}`, {
         method: 'DELETE'
       })
       
@@ -502,10 +498,10 @@ const Reservation = () => {
                     value={reservationForm.tableId}
                     onChange={(e) => handleFormChange('tableId', e.target.value)}
                   >
-                    <option value="">Select Table</option>
+                    <option value="">{availabilityError || "Choose date and time, then table"}</option>
                     {getAllTables().map(table => (
-                      <option key={table.id} value={table.id}>
-                        {table.name} ({table.areaName})
+                      <option key={table.id} value={table.id} disabled={table.current_status !== 'available'}>
+                        {table.name} — {table.current_status}
                       </option>
                     ))}
                   </select>
@@ -518,7 +514,7 @@ const Reservation = () => {
                   onChange={(e) => handleFormChange('status', e.target.value)}
                 >
                   <option value="pending">Pending</option>
-                  <option value="success">Success</option>
+                  <option value="success">Confirmed (legacy)</option><option value="confirmed">Confirmed</option><option value="seated">Seated</option><option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
               </div>
@@ -617,10 +613,10 @@ const Reservation = () => {
                     value={reservationForm.tableId}
                     onChange={(e) => handleFormChange('tableId', e.target.value)}
                   >
-                    <option value="">Select Table</option>
+                    <option value="">{availabilityError || "Choose date and time, then table"}</option>
                     {getAllTables().map(table => (
-                      <option key={table.id} value={table.id}>
-                        {table.name} ({table.areaName})
+                      <option key={table.id} value={table.id} disabled={table.current_status !== 'available'}>
+                        {table.name} — {table.current_status}
                       </option>
                     ))}
                   </select>
@@ -633,7 +629,7 @@ const Reservation = () => {
                   onChange={(e) => handleFormChange('status', e.target.value)}
                 >
                   <option value="pending">Pending</option>
-                  <option value="success">Success</option>
+                  <option value="success">Confirmed (legacy)</option><option value="confirmed">Confirmed</option><option value="seated">Seated</option><option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
               </div>

@@ -1,3 +1,4 @@
+import apiFetch from '../../utils/api';
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -52,7 +53,7 @@ const MainKotOne = () => {
       setRestaurantDetailsStatus(statusOne.PENDING);
       try {
         const url = `https://eathubbackend-1.onrender.com/restaurant/${restaurantIdFromToken}`;
-        const res = await fetch(url);
+        const res = await apiFetch(url);
         if (res.ok) {
           const json = await res.json();
           setRestaurantDetails(json[0]);
@@ -70,7 +71,7 @@ const MainKotOne = () => {
       setChefDetailsStatus(statusOne.PENDING);
       try {
         const url = `https://eathubbackend-1.onrender.com/waiterDetailsRestaurant/${chefIdFromToken}`;
-        const res = await fetch(url);
+        const res = await apiFetch(url);
         if (res.ok) {
           const json = await res.json();
           setChefDetails(json.waiter && json.waiter.length > 0 ? json.waiter[0] : null);
@@ -89,7 +90,7 @@ const MainKotOne = () => {
       setOrdersStatus(statusOne.PENDING);
       try {
         const url = `https://eathubbackend-1.onrender.com/getOrdersKitchen/${restaurantIdFromToken}`;
-        const res = await fetch(url);
+        const res = await apiFetch(url);
         if (res.ok) {
           const json = await res.json();
           const ordersWithParsedItems = (json.order || []).map((order) => ({

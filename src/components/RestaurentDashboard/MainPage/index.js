@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { FaLocationDot, FaIndianRupeeSign } from "react-icons/fa6";
@@ -176,7 +177,7 @@ const RestaurantDashboard = () => {
             const getTablesDataInside = async () => {
                 try{
                     const url = `https://eathubbackend-1.onrender.com/getTables/${each.id}`;
-                    const response = await fetch(url);
+                    const response = await apiFetch(url);
                     if(response.ok){
                         const jsonOne = await response.json();
                         setTablesData(prev => [...prev, {
@@ -214,7 +215,7 @@ const RestaurantDashboard = () => {
         try{
           setDataStatus(statusOne.PENDING);
           const url  = `${API_BASE_URL}/restaurant/${restaurantId}`
-          const response = await fetch(url);
+          const response = await apiFetch(url);
     
           if(response.ok){
             const jsonOne = await response.json();
@@ -230,7 +231,7 @@ const RestaurantDashboard = () => {
             
             // Fetch and apply theme preference
             try {
-              const themeResponse = await fetch(`${API_BASE_URL}/getDisplaySettings/${restaurantId}`);
+              const themeResponse = await apiFetch(`${API_BASE_URL}/getDisplaySettings/${restaurantId}`);
               if (themeResponse.ok) {
                 const themeData = await themeResponse.json();
                 if (themeData.settings && themeData.settings.theme) {
@@ -256,7 +257,7 @@ const RestaurantDashboard = () => {
         try{
           setMenuCategoriesStatus(statusOne.PENDING);
           const url = `${API_BASE_URL}/restaurant_details/getMenuCategory/${restaurantId}`;
-          const response = await fetch(url);
+          const response = await apiFetch(url);
           if(response.ok){
             const jsonOne = await response.json();
             console.log("menu categories x - old", jsonOne);
@@ -277,7 +278,7 @@ const RestaurantDashboard = () => {
         setStaffStatus(statusOne.LOADING);
         try{
           const url = `${API_BASE_URL}/restaurant_details/getStaff/${restaurantId}`;
-          const response = await fetch(url);
+          const response = await apiFetch(url);
           if(response.ok){
               const data = await response.json();
               console.log(data)
@@ -298,7 +299,7 @@ const RestaurantDashboard = () => {
         try{
           setMenuDataStatus(statusOne.PENDING);
           const url = `${API_BASE_URL}/getMenuItems/${restaurantId}`;
-          const response = await fetch(url);
+          const response = await apiFetch(url);
           if(response.ok){
             const jsonOne = await response.json();
             setMenuData(jsonOne);
@@ -317,7 +318,7 @@ const RestaurantDashboard = () => {
       const fetchOrders = async () => {
         setOrdersStatus(statusOne.PENDING);
         try{
-          const response = await fetch(`${API_BASE_URL}/getOrderRestaurant/${restaurantId}`)
+          const response = await apiFetch(`${API_BASE_URL}/getOrderRestaurant/${restaurantId}`)
           if(response.ok){
               const data = await response.json()
               console.log(data.order)
@@ -338,7 +339,7 @@ const RestaurantDashboard = () => {
         try{
           setAreasDataStatus(statusOne.PENDING);
           const url = `${API_BASE_URL}/getAreas/${restaurantId}`;
-          const response = await fetch(url);
+          const response = await apiFetch(url);
           if(response.ok){
             const jsonOne = await response.json();
             sayHiOne(jsonOne);
@@ -386,7 +387,7 @@ const RestaurantDashboard = () => {
         // setOrdersStatus(statusOne.PENDING);
         try{
           console.log(userId)
-          const response = await fetch(`${API_BASE_URL}/getOrderRestaurant/${userId}`)
+          const response = await apiFetch(`${API_BASE_URL}/getOrderRestaurant/${userId}`)
           if(response.ok){
               const data = await response.json()
               console.log(data.order)
@@ -545,7 +546,7 @@ const RestaurantDashboard = () => {
       const getRestaurantData = async () => {
         try{
           const url = `https://eathubbackend-1.onrender.com/restaurant/${userId}`;
-          const response = await fetch(url);
+          const response = await apiFetch(url);
           if(response.ok){
             const jsonOne = await response.json();
             setRestaurantData(jsonOne[0]);
@@ -712,7 +713,7 @@ const RestaurantDashboard = () => {
     setSelectedWaiterId(null);
 
     try {
-      const res = await fetch(`https://eathubbackend-1.onrender.com/getWaitersWithStatus/${userId}`);
+      const res = await apiFetch(`https://eathubbackend-1.onrender.com/getWaitersWithStatus/${userId}`);
       if (!res.ok) {
         setWaitersError('Failed to load waiters. Please try again.');
         setAvailableWaiters([]);
@@ -761,7 +762,7 @@ const RestaurantDashboard = () => {
         message: 'Admin is calling you to the counter.'
       };
 
-      const res = await fetch('https://eathubbackend-1.onrender.com/createAdminCall', {
+      const res = await apiFetch('https://eathubbackend-1.onrender.com/createAdminCall', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

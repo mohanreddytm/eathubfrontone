@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React from 'react'
 import ComplexCustomer from '../../../complexOneForCustomer'
 import { useContext, useState, useEffect, useCallback } from 'react'
@@ -35,7 +36,7 @@ const OrderOne = () => {
         }
         try {
             const url = `${API_BASE_URL}/getOrderDetails/${resolvedOrderId}`;
-            const response = await fetch(url);
+            const response = await apiFetch(url);
             if(response.ok) {
                 const data = await response.json();
                 if(data.order && data.order.length > 0) {
@@ -85,7 +86,7 @@ const OrderOne = () => {
         const fetchPaymentSettings = async () => {
             if (!restaurantId) return;
             try {
-                const response = await fetch(`${API_BASE_URL}/getPaymentSettings/${restaurantId}`);
+                const response = await apiFetch(`${API_BASE_URL}/getPaymentSettings/${restaurantId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setRestaurantPaymentSettings(data.settings);
@@ -115,7 +116,7 @@ const OrderOne = () => {
                 notes: 'Customer requested waiter assistance from order details page'
             }
 
-            const response = await fetch(`${API_BASE_URL}/createWaiterRequest`, {
+            const response = await apiFetch(`${API_BASE_URL}/createWaiterRequest`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,168 +192,24 @@ const OrderOne = () => {
         )
     }
 
-    const handlePayment = async (method) => {
-        const resolvedOrderId = getResolvedOrderId();
-        if (!orderDetails || !resolvedOrderId) {
-            alert('Order details not available. Please refresh the page.');
-            return;
-        }
-
-        if (method === 'Cash') {
-            // For cash payment, just update status and show message
-            setPaymentLoading(true);
-            try {
-                const paymentId = uuidv4();
-                const totalAmount = calculateTotal();
-
-                const paymentData = {
-                    id: paymentId,
-                    restaurant_id: restaurantId,
-                    order_id: resolvedOrderId,
-                    order_number: orderDetails.order_number,
-                    table_id: tableId,
-                    table_name: orderDetails.table_name,
-                    amount: totalAmount,
-                    payment_method: 'Cash',
-                    payment_status: 'Pending',
-                    transaction_id: `CASH${Date.now()}`,
-                    notes: 'Payment pending - customer will pay cash to waiter'
-                };
-
-                const response = await fetch(`${API_BASE_URL}/createPayment`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(paymentData)
-                });
-
-                if (response.ok) {
-                    setPaymentStatus('Pending');
-                    setPaymentMethod('Cash');
-                    setShowPaymentPopup(false);
-                    
-                    // Update order payment status
-                    await fetch(`${API_BASE_URL}/updateOrderPaymentStatus/${resolvedOrderId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ payment_status: 'Pending', payment_method: 'Cash' })
-                    });
-                    
-                    // Refresh order details
-                    const refreshResponse = await fetch(`${API_BASE_URL}/getOrderDetails/${resolvedOrderId}`);
-                    if (refreshResponse.ok) {
-                        const refreshData = await refreshResponse.json();
-                        if (refreshData.order && refreshData.order.length > 0) {
-                            const order = refreshData.order[0];
-                            if (order.items && typeof order.items === 'string') {
-                                try {
-                                    order.items = JSON.parse(order.items);
-                                } catch(e) {
-                                    order.items = [];
-                                }
-                            }
-                            setOrderDetails(order);
-                        }
-                    }
-                } else {
-                    const errorData = await response.json();
-                    alert(errorData.error || 'Failed to process payment request. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error processing payment:', error);
-                alert('Failed to process payment request. Please check your connection and try again.');
-            } finally {
-                setPaymentLoading(false);
-            }
-        } else if (method === 'UPI') {
-            // For UPI, show UPI payment options
-            setShowPaymentPopup(false);
-            setShowUPIPopup(true);
-        }
-    }
-
-    const handleUPIPayment = async (upiId) => {
-        const resolvedOrderId = getResolvedOrderId();
-        if (!orderDetails || !resolvedOrderId) {
-            alert('Order details not available. Please refresh the page.');
-            return;
-        }
-
+    const submitPaymentRequest = async (method, upiId = '') => {
+        const id = getResolvedOrderId();
+        if (!id || paymentLoading) return;
         setPaymentLoading(true);
         try {
-            const paymentId = uuidv4();
-            const totalAmount = calculateTotal();
-
-            const paymentData = {
-                id: paymentId,
-                restaurant_id: restaurantId,
-                order_id: orderId,
-                order_number: orderDetails.order_number,
-                table_id: tableId,
-                table_name: orderDetails.table_name,
-                amount: totalAmount,
-                payment_method: 'UPI',
-                payment_status: 'Paid',
-                transaction_id: `UPI${Date.now()}`,
-                notes: `Payment via UPI: ${upiId}`
-            };
-
-            const response = await fetch(`${API_BASE_URL}/createPayment`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(paymentData)
+            const res = await apiFetch(`${API_BASE_URL}/createPayment`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_id: id, restaurant_id: restaurantId, payment_method: method,
+                    notes: upiId ? `Customer selected UPI ${upiId}; verify receipt` : 'Cash payment requested' })
             });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                setPaymentStatus('Paid');
-                setPaymentMethod('UPI');
-                setShowUPIPopup(false);
-                
-                // Update order payment status
-                const updateResponse = await fetch(`${API_BASE_URL}/updateOrderPaymentStatus/${resolvedOrderId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ payment_status: 'Paid', payment_method: 'UPI' })
-                });
-                
-                if (updateResponse.ok) {
-                    // Refresh order details
-                    const refreshResponse = await fetch(`${API_BASE_URL}/getOrderDetails/${resolvedOrderId}`);
-                    if (refreshResponse.ok) {
-                        const refreshData = await refreshResponse.json();
-                        if (refreshData.order && refreshData.order.length > 0) {
-                            const order = refreshData.order[0];
-                            if (order.items && typeof order.items === 'string') {
-                                try {
-                                    order.items = JSON.parse(order.items);
-                                } catch(e) {
-                                    order.items = [];
-                                }
-                            }
-                            setOrderDetails(order);
-                        }
-                    }
-                }
-                alert(`Payment successful via UPI! Transaction ID: ${paymentData.transaction_id}`);
-            } else {
-                const errorData = await response.json();
-                alert(errorData.error || 'Payment failed. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error processing UPI payment:', error);
-            alert('Payment failed. Please check your connection and try again.');
-        } finally {
-            setPaymentLoading(false);
-        }
-    }
+            const data = await res.json(); if (!res.ok) throw new Error(data.error || 'Payment request failed');
+            setPaymentStatus(data.payment.payment_status); setPaymentMethod(data.payment.payment_method);
+            setShowUPIPopup(false); setShowPaymentPopup(false);
+            alert(['Paid','SUCCESS'].includes(data.payment.payment_status) ? 'Staff have confirmed payment.' : 'Request sent. Pay the restaurant and wait for staff to confirm receipt.');
+        } catch (e) { alert(e.message); } finally { setPaymentLoading(false); }
+    };
+    const handlePayment = method => { if (method === 'UPI') { setShowPaymentPopup(false); setShowUPIPopup(true); } else submitPaymentRequest(method); };
+    const handleUPIPayment = upiId => submitPaymentRequest('UPI', upiId);
 
     const paymentPopup = () => {
         if (!orderDetails) return null;
@@ -459,7 +316,7 @@ const OrderOne = () => {
                 ? parseFloat(orderDetails.discount_amount) 
                 : orderDetails.discount_amount)
             : 0;
-        return subtotal + tax - discount;
+        return subtotal + (orderDetails.tax_mode === 'inclusive' ? 0 : tax) - discount;
     };
 
     const getItems = () => {

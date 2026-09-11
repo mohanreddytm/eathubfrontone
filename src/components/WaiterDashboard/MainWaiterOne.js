@@ -1,3 +1,4 @@
+import apiFetch from '../../utils/api';
 import React, { use } from 'react'
 
 import { useState, useEffect } from 'react'
@@ -61,7 +62,7 @@ const MainWaiterOne = () => {
         // Fetch orders assigned to this specific waiter
         const url = `https://eathubbackend-1.onrender.com/getOrdersWaiter/${waiterId}`;
         try {
-          const res = await fetch(url);
+          const res = await apiFetch(url);
           if (res.ok) {
             setOrdersStatus(statusOne.SUCCESS);
             const json = await res.json();
@@ -87,7 +88,7 @@ const MainWaiterOne = () => {
       const fetchRestaurantDetails = async () => {
         setRestaurantDetailsStatus(statusOne.PENDING);
         const url = `https://eathubbackend-1.onrender.com/restaurant/${restaurantId}`;
-        const res = await fetch(url);
+        const res = await apiFetch(url);
         if (res.ok) {
           setRestaurantDetailsStatus(statusOne.SUCCESS);
           const json = await res.json();
@@ -103,7 +104,7 @@ const MainWaiterOne = () => {
         setWaiterDetailsStatus(statusOne.PENDING)
         const url = `https://eathubbackend-1.onrender.com/waiterDetailsRestaurant/${waiterId}`;
         try {
-          const res = await fetch(url);
+          const res = await apiFetch(url);
           if (res.ok) {
             setWaiterDetailsStatus(statusOne.SUCCESS)
             const json = await res.json();
@@ -126,7 +127,7 @@ const MainWaiterOne = () => {
       const fetchAreas = async () => {
         setAreasStatus(statusOne.PENDING)
         try {
-          const res = await fetch(`https://eathubbackend-1.onrender.com/getAreas/${restaurantId}`);
+          const res = await apiFetch(`https://eathubbackend-1.onrender.com/getAreas/${restaurantId}`);
           if(res.ok){
             const json = await res.json();
             const areasData = Array.isArray(json) ? json : [];
@@ -164,7 +165,7 @@ const MainWaiterOne = () => {
           // Fetch tables for each area
           const tablePromises = areasData.map(async (area) => {
             try {
-              const tablesRes = await fetch(`https://eathubbackend-1.onrender.com/getTables/${area.id}`);
+              const tablesRes = await apiFetch(`https://eathubbackend-1.onrender.com/getTables/${area.id}`);
               if(tablesRes.ok) {
                 const tables = await tablesRes.json();
                 return Array.isArray(tables) ? tables : [];
@@ -202,7 +203,7 @@ const MainWaiterOne = () => {
         }
         try {
           setAdminCallsStatus(statusOne.PENDING);
-          const res = await fetch(`https://eathubbackend-1.onrender.com/getPendingAdminCallsWaiter/${waiterId}`);
+          const res = await apiFetch(`https://eathubbackend-1.onrender.com/getPendingAdminCallsWaiter/${waiterId}`);
           if (res.ok) {
             const json = await res.json();
             setAdminCalls(Array.isArray(json.calls) ? json.calls : []);

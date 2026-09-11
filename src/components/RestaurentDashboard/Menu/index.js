@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { IoIosSearch } from "react-icons/io";
@@ -101,7 +102,7 @@ const MenuPage = () => {
         formData.append("file", file);
         formData.append("upload_preset", "my_preset"); // <-- your unsigned upload preset name
 
-        const res = await fetch(
+        const res = await apiFetch(
         "https://api.cloudinary.com/v1_1/dbrwqjsl3/image/upload",
         { method: "POST", body: formData }
         );
@@ -145,7 +146,7 @@ const MenuPage = () => {
             body:JSON.stringify(newEditItem)
         }
 
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
 
         if(response.ok){
             setUpdateMenuItemLoading(false);
@@ -165,7 +166,7 @@ const MenuPage = () => {
             },
         }
 
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
 
         if (response.ok) {
             deleteMenuItem(id, one);
@@ -202,7 +203,7 @@ const MenuPage = () => {
             body:JSON.stringify(newItem)
         }
 
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
 
         if(response.ok){
             addingMenuFun(newItem[0]);
@@ -243,7 +244,7 @@ const MenuPage = () => {
             body: JSON.stringify(newCategory)
         }
 
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
 
         if (response.ok) {
             addMenuCategory(newCategory[0]);
@@ -299,7 +300,7 @@ const MenuPage = () => {
             body: JSON.stringify(editOfCategory)
         }
 
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
 
         // const url = ""
         // should start from here
@@ -357,7 +358,7 @@ const MenuPage = () => {
             }
         }
 
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
         if(response.ok){
             deleteMenuCategory(one.id);
         }else{

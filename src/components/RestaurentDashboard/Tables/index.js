@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import './index.css'
 import AllInOne from '../../../complexOne'
 import { useContext, useState, useEffect, useRef } from 'react'
@@ -163,7 +164,7 @@ const Tables = () => {
                     body: JSON.stringify(updatedTableData),
                 };
 
-                const response = await fetch(url, options);
+                const response = await apiFetch(url, options);
                 const data = await response.json();
                 console.log(data)
                 setAddTableLoading(false);
@@ -201,7 +202,7 @@ const Tables = () => {
                     body: JSON.stringify(newTableData),
                 };
 
-                const response = await fetch(url, options);
+                const response = await apiFetch(url, options);
                 const data = await response.json();
                 console.log(data)
                 setAddTableLoading(false);
@@ -235,7 +236,7 @@ const Tables = () => {
         const options = {
             method:"DELETE"
         }
-        const response = await fetch(url, options);
+        const response = await apiFetch(url, options);
         if(response.ok){
             deleteTable(one.id);
         }else{
@@ -301,7 +302,7 @@ const Tables = () => {
                 body: JSON.stringify(newAreaData),
             };
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             setLoadingAddArea(false);
             if(response.ok){
                 addArea(newAreaData[0]);
@@ -320,7 +321,7 @@ const Tables = () => {
                 method: 'DELETE'
             };
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             setDeleteAreaLoading(false);
             if(response.ok){
                 // Remove the deleted area from the state
@@ -351,7 +352,7 @@ const Tables = () => {
                 body: JSON.stringify(areaOne),
             };
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             setOnEditAreaLoading(false);
             const json = await response.json()
             console.log(json)
