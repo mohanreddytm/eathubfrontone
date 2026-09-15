@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { use } from 'react'
 import { useState, useEffect, useContext } from 'react';
 import { CgProfile } from "react-icons/cg";
@@ -112,7 +113,7 @@ const Staff = () => {
             }
 
             try {
-                const response = await fetch(url, options);
+                const response = await apiFetch(url, options);
                 const data = await response.json();
                 if(response.ok){
                     console.log('Staff added successfully:', data);
@@ -174,7 +175,7 @@ const Staff = () => {
                 },
             };
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             const data = await response.json();
             
             if(response.ok){
@@ -228,7 +229,7 @@ const Staff = () => {
             }
 
             try {
-                const response = await fetch(url, options);
+                const response = await apiFetch(url, options);
                 const data = await response.json();
                 if(response.ok){
                     console.log('Staff updated successfully:', data);

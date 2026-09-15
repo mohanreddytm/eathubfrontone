@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { useContext, useState, useEffect } from 'react'
 import './index.css'
 import AllInOne from '../../../complexOne/index'
@@ -18,7 +19,7 @@ const Profile = () => {
       } else if (userId) {
         try {
           const url = `https://eathubbackend-1.onrender.com/restaurant/${userId}`
-          const response = await fetch(url)
+          const response = await apiFetch(url)
           if (response.ok) {
             const json = await response.json()
             setRestaurantData(json[0])

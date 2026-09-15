@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import Header from "../Header"
 
 import { FaEye } from "react-icons/fa";
@@ -240,7 +241,7 @@ const RegisterMainRoute = () => {
                     }),
                 }
 
-                const response = await fetch(url, options);
+                const response = await apiFetch(url, options);
                 const data = await response.json();
                 setIsLoading(false);
                 if(response.ok){

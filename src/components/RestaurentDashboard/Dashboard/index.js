@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React from 'react'
 import { useState, useEffect, useContext } from 'react'
 
@@ -138,7 +139,7 @@ const Dashboard = () => {
         const fetchPayments = async () => {
             if (!userId) return;
             try {
-                const response = await fetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
+                const response = await apiFetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setPayments(data.payments || []);
@@ -157,7 +158,7 @@ const Dashboard = () => {
         const fetchPendingPayments = async () => {
             if (!userId) return;
             try {
-                const response = await fetch(`https://eathubbackend-1.onrender.com/getPendingPayments/${userId}`);
+                const response = await apiFetch(`https://eathubbackend-1.onrender.com/getPendingPayments/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
                     const pending = data.payments || [];
@@ -201,7 +202,7 @@ const Dashboard = () => {
         // Current active orders (not completed/served)
         const currentOrders = orders.filter(order => {
             const status = order.order_status || order.status;
-            return status && status !== 'Served' && status !== 'Completed' && status !== 'Delivered' && status !== 'Paid';
+            return status && status !== 'Served' && status !== 'Completed' && status !== 'Delivered' && status !== 'Paid' && status !== 'Cancelled';
         });
 
         // Yesterday's orders
@@ -213,14 +214,14 @@ const Dashboard = () => {
         // Today's earnings from payments
         const todayPayments = payments.filter(payment => {
             const paymentDate = new Date(payment.created_at);
-            return paymentDate >= today && paymentDate <= endOfToday && payment.payment_status === 'Paid';
+            return paymentDate >= today && paymentDate <= endOfToday && ['Paid','SUCCESS'].includes(payment.payment_status);
         });
         const todayEarnings = todayPayments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
 
         // Yesterday's earnings
         const yesterdayPayments = payments.filter(payment => {
             const paymentDate = new Date(payment.created_at);
-            return paymentDate >= yesterday && paymentDate <= endOfYesterday && payment.payment_status === 'Paid';
+            return paymentDate >= yesterday && paymentDate <= endOfYesterday && ['Paid','SUCCESS'].includes(payment.payment_status);
         });
         const yesterdayEarnings = yesterdayPayments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
 
@@ -233,7 +234,7 @@ const Dashboard = () => {
         const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
         const thisMonthPayments = payments.filter(payment => {
             const paymentDate = new Date(payment.created_at);
-            return paymentDate >= thisMonthStart && payment.payment_status === 'Paid';
+            return paymentDate >= thisMonthStart && ['Paid','SUCCESS'].includes(payment.payment_status);
         });
         const thisMonthEarnings = thisMonthPayments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
         const daysInMonth = today.getDate();
@@ -350,7 +351,7 @@ const Dashboard = () => {
             
             const dayPayments = payments.filter(payment => {
                 const paymentDate = new Date(payment.created_at);
-                return paymentDate >= dayDate && paymentDate <= dayEnd && payment.payment_status === 'Paid';
+                return paymentDate >= dayDate && paymentDate <= dayEnd && ['Paid','SUCCESS'].includes(payment.payment_status);
             });
             
             const dayEarnings = dayPayments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
@@ -375,7 +376,7 @@ const Dashboard = () => {
         
         setProcessingPayment(true);
         try {
-            const response = await fetch(`https://eathubbackend-1.onrender.com/updatePaymentStatus/${paymentId}`, {
+            const response = await apiFetch(`https://eathubbackend-1.onrender.com/updatePaymentStatus/${paymentId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -397,7 +398,7 @@ const Dashboard = () => {
                 }
                 
                 // Refresh payments
-                const refreshResponse = await fetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
+                const refreshResponse = await apiFetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
                 if (refreshResponse.ok) {
                     const refreshData = await refreshResponse.json();
                     setPayments(refreshData.payments || []);

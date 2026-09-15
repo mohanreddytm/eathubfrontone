@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import AllInOne from '../../../complexOne';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +18,7 @@ const StaffChat = () => {
       setLoading(true);
     }
     try {
-      const res = await fetch(`https://eathubbackend-1.onrender.com/restaurant_messages/${userId}`);
+      const res = await apiFetch(`https://eathubbackend-1.onrender.com/restaurant_messages/${userId}`);
       if (res.ok) {
         const data = await res.json();
         setMessages(Array.isArray(data.messages) ? data.messages : []);
@@ -63,7 +64,7 @@ const StaffChat = () => {
         sender_name: restaurantDetails ? restaurantDetails.name : 'Admin',
         message: input.trim(),
       };
-      const res = await fetch('https://eathubbackend-1.onrender.com/restaurant_messages', {
+      const res = await apiFetch('https://eathubbackend-1.onrender.com/restaurant_messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

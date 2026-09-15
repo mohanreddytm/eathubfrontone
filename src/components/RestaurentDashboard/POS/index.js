@@ -1,3 +1,5 @@
+import OrderActions from './OrderActions';
+import apiFetch from '../../../utils/api';
 import React, { useEffect, useContext, useState, useRef } from "react";
 import './index.css';
 import AllInOne  from "../../../complexOne";
@@ -333,7 +335,7 @@ const POSPage = () => {
                 body: JSON.stringify(orderItem)
             };
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             
             if(response.ok){
                 const responseData = await response.json();
@@ -352,7 +354,7 @@ const POSPage = () => {
                             },
                             body: JSON.stringify({tableId: selectedTable.id, status: "use"})
                         };
-                        const tableResponse = await fetch("https://eathubbackend-1.onrender.com/restaurant_details/updatedTableStatus", tableOptions);
+                        const tableResponse = await apiFetch("https://eathubbackend-1.onrender.com/restaurant_details/updatedTableStatus", tableOptions);
                         if(tableResponse.ok){
                             console.log("Table status updated successfully");
                         }
@@ -398,7 +400,7 @@ const POSPage = () => {
         try{
             const newStatus = status === "Pending" ? "Confirmed" : status === "Confirmed" ? "Preparing" : status === "Preparing" ? "Ready" : "";
             const url = `https://eathubbackend-1.onrender.com/updateStatus/${clickedOrder.id}/${newStatus}`;
-            const response = await fetch(url, {
+            const response = await apiFetch(url, {
                 method: "PUT",
             });
             if(response.ok){
@@ -417,163 +419,6 @@ const POSPage = () => {
         }
     }
 
-
-        const posEditOrder = () => {
-            // console.log("clickedOrder - one : ", clickedOrder);
-            return(
-                <div className="pos-page-main-cont-two">
-                {/* need to do for the width adapt */}
-                <h1 className="pos-page-main-cont-two-h1">Order #{clickedOrder.order_number}</h1>
-                <div className="pos-page-main-cont-two-h1-two" >
-                        <button onClick={onClickAssignTable} className="pos-page-main-cont-two-h1-two-button">{clickedOrder.table_name === null ? "Assign Table" : clickedOrder.table_name}</button>
-                        <div className="tooltip-container">
-                        <MdNoteAlt onClick={() => setIsOpenNoteOne(true)} className="pos-page-main-cont-two-h1-two-button-icon"  />
-                        <span className="tooltip">note</span>
-                    </div>
-                    <button className="pos-page-main-cont-two-h1-two-button-two" onClick={() => setShowAssignPopup(true)}>{clickedOrder.waiter_name === null ? "Assign Waiter" : clickedOrder.waiter_name}</button>
-                    <div className={`pos-page-main-cont-two-note-cont ${isOpenNoteOne ? 'open-note-input-one' : ''}`}>
-                        <input type="text" placeholder="Enter Note Here" value={noteText} onChange={(e) => setNoteText(e.target.value)} />
-                        <button>Add Note</button>
-                        <p onClick={() => setIsOpenNoteOne(false)}>x</p>
-                    </div>
-                </div>
-                <div className="pos-page-main-cont-two-set-order-status">
-                    <h1>Set Order Status</h1>
-
-                        <ul>
-                            <li className={clickedOrder.status === "Pending" ? "active-order-status" : ""}>
-                                <CiMemoPad className="order-status-icon" />
-                                <p>Order <br /> Pending</p>
-                            </li>
-                            <li className={clickedOrder.status === "Confirmed" ? "active-order-status" : ""}>
-                                <GiConfirmed className="order-status-icon" />
-                                <p>Order <br /> Confirmed</p>
-                            </li>
-                            <li className={clickedOrder.status === "Preparing" ? "active-order-status" : ""}>
-                                <PiCookingPotFill className="order-status-icon" />
-                                <p>Order <br /> Preparing</p>
-                            </li>
-                            <li className={clickedOrder.status === "Ready" ? "active-order-status" : ""}>
-                                <BiSolidDish className="order-status-icon" />
-                                <p>Order <br /> Ready</p>
-                            </li>
-                        </ul>
-                    
-
-                    <button className="move-to-confirmed-button" onClick={() => onClickMoveToStatusOne(clickedOrder.status)}>Move to - {clickedOrder.status === "Pending" ? "Confirmed" : clickedOrder.status === "Confirmed" ? "Preparing" : clickedOrder.status === "Preparing" ? "Ready" : ""} <FaArrowRightLong /></button>
-                </div>
-                <table className="pos-page-main-cont-two-table">
-                    <thead >
-                        <tr className="pos-page-main-cont-two-table-thead-tr">
-                            <th>Item</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {clickedOrder.items.map((item) => {
-                            // console.log("item - one : ", item);
-                            return(
-                                <tr className="pos-page-main-cont-two-table-tbody-tr"  key={item.id}>
-                                    <td><p className="pos-page-main-cont-two-table-tbody-tr-name">{item.cart_item_name}</p></td>
-                                    <td><div className="pos-page-main-cont-two-table-tbody-tr-qty pos-edit-sp">
-                                        {/* <p onClick={onClickMinusMenuItem(item.id)}>-</p> */}
-                                        {item.quantity}
-                                        {/* <p onClick={onClickPlusMenuItem(item.id)}>+</p> */}
-                                        </div></td>
-                                    <td>₹ {item.cart_item_price}</td>
-                                    <td>₹ {item.cart_item_price * item.quantity}</td>
-                                    <td><button onClick={() => onClickDeleteItem(item.id)} className="pos-page-main-cont-two-table-tbody-tr-button"><MdDeleteForever /></button></td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-                {clickedOrder.items.length === 0 && <div className={`pos-page-main-cont-two-table-tbody-div ${madeForItemsError ? 'blink-for-error' : ''}`}>
-                    {madeForItemsError ?<p>Select an item from the menu <br/> to proceed with KOT</p>
-                 :  <p>Please select an item to add <br/> to the order !</p>}
-                </div>   }
- 
-                <div className="pos-page-main-cont-two-table-tbody">
-                    <div className="pos-page-main-cont-two-table-tbody-button-cont-one">
-                        <button onClick={() => setIsOpenPopupDiscount(true)} className="pos-page-main-cont-two-table-tbody-button"><MdDiscount /> Add Discount</button>
-                        <button onClick={() => setIsOpenPopupTax(true)} className="pos-page-main-cont-two-table-tbody-button">Tax Mode</button>
-                    </div>
-                    <div>
-                        <p>Item(s)</p>
-                        <p>{clickedOrder.items.length}</p>
-                    </div>
-                    <div>
-                        <p>Subtotal</p>
-                        <p>₹ {clickedOrder.items.reduce((acc, item) => acc + (item.cart_item_price || item.price) * item.quantity, 0).toFixed(2)}</p>
-                    </div>
-                    <div>
-                        <p>Discount</p>
-                        <p className="special-dicount-style"> - ₹ {(() => {
-                            if (clickedOrder.discount_amount) {
-                                const discount = typeof clickedOrder.discount_amount === 'string' 
-                                    ? parseFloat(clickedOrder.discount_amount) 
-                                    : clickedOrder.discount_amount;
-                                return discount.toFixed(2);
-                            }
-                            return '0.00';
-                        })()}</p>
-                    </div>
-                    <div>
-                        <p>Tax</p>
-                        <p>₹ {(() => {
-                            const subtotal = clickedOrder.items.reduce((acc, item) => acc + (item.cart_item_price || item.price) * item.quantity, 0);
-                            if (finalTaxNumber && finalTaxType === "Percentage") {
-                                return (subtotal * parseFloat(finalTaxNumber) / 100).toFixed(2);
-                            } else if (finalTaxNumber && finalTaxType === "Fixed Amount") {
-                                return parseFloat(finalTaxNumber).toFixed(2);
-                            } else if (clickedOrder.tax_amount) {
-                                const tax = typeof clickedOrder.tax_amount === 'string' 
-                                    ? parseFloat(clickedOrder.tax_amount) 
-                                    : clickedOrder.tax_amount;
-                                return tax.toFixed(2);
-                            }
-                            return '0.00';
-                        })()}</p>
-                    </div>
-                    <div className="pos-page-main-cont-two-table-tbody-button-cont-two-total">
-                        <p>Total</p>
-                        <p>₹ {(() => {
-                            const subtotal = clickedOrder.items.reduce((acc, item) => acc + (item.cart_item_price || item.price) * item.quantity, 0);
-                            const discount = clickedOrder.discount_amount 
-                                ? (typeof clickedOrder.discount_amount === 'string' 
-                                    ? parseFloat(clickedOrder.discount_amount) 
-                                    : clickedOrder.discount_amount)
-                                : 0;
-                            let tax = 0;
-                            if (finalTaxNumber && finalTaxType === "Percentage") {
-                                tax = subtotal * parseFloat(finalTaxNumber) / 100;
-                            } else if (finalTaxNumber && finalTaxType === "Fixed Amount") {
-                                tax = parseFloat(finalTaxNumber);
-                            } else if (clickedOrder.tax_amount) {
-                                tax = typeof clickedOrder.tax_amount === 'string' 
-                                    ? parseFloat(clickedOrder.tax_amount) 
-                                    : clickedOrder.tax_amount;
-                            }
-                            return (subtotal + tax - discount).toFixed(2);
-                        })()}</p>
-                    </div>
-                </div>
-                <div className="pos-edit-order-button-cont">
-                    <button className="pos-edit-order-button-KOT">New KOT</button>
-                    <button className="pos-edit-order-button-bill">BILL</button>
-                    <button className="pos-edit-order-button-b-p">BILL & PRINT</button>
-                    <button className="pos-edit-order-button-b-p2">BILL & PAYMENT</button>
-                    <button className="pos-edit-order-button-delete">Delete Order</button>
-                </div>
-                
-
-            </div>
-            )
-
-        }
 
         const posNewOrder = () => {
             return(
@@ -706,7 +551,7 @@ const POSPage = () => {
 
     const posMainOne = () => {
         if(clickedOrder != null){
-            return posEditOrder();
+            return <OrderActions orderId={clickedOrder.id} menuItems={menuData} onChanged={updateOrdersStatus} />;
         }
         
         return posNewOrder();

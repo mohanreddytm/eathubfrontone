@@ -1,3 +1,4 @@
+import apiFetch from '../../utils/api';
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ComplexCustomer from '../../complexOneForCustomer';
@@ -21,13 +22,19 @@ const CustomerDashboardWrapper = ({ children }) => {
   const [menuCategoris, seMenuCategoris] = useState([])
   const [orderId, setOrderId] = useState("");
 
+  const [tableAvailability,setTableAvailability]=useState('loading');
+  useEffect(()=>{
+    let active=true;
+    const load=()=>apiFetch(`https://eathubbackend-1.onrender.com/public/tables/${restaurantId}`).then(r=>r.json()).then(d=>{if(active)setTableAvailability(d.tables?.find(t=>t.id===tableId)?.current_status || 'unavailable');}).catch(()=>{if(active)setTableAvailability('unavailable');});
+    load();const id=setInterval(load,60000);return ()=>{active=false;clearInterval(id);};
+  },[restaurantId,tableId]);
   const [tableNameStatus, setTableNameStatus] = useState(statusOne.INITIAL)
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       setMenuItemsStatus(statusOne.LOADING)
       const url = `https://eathubbackend-1.onrender.com/getMenuItems/${restaurantId}`;
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       if (res.ok){
         setMenuItems(await res.json())
         setMenuItemsStatus(statusOne.SUCCESS)
@@ -38,7 +45,7 @@ const CustomerDashboardWrapper = ({ children }) => {
 
     const fetchRestaurantDetails = async () => {
       const url = `https://eathubbackend-1.onrender.com/restaurant/${restaurantId}`;
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       if (res.ok) {
         const json = await res.json();
         setRestaurantDetails(json[0].restaurentname);
@@ -49,7 +56,7 @@ const CustomerDashboardWrapper = ({ children }) => {
       console.log("fetching table name", tableId)
       setTableNameStatus(statusOne.LOADING)
       const url = `https://eathubbackend-1.onrender.com/getTableName/${tableId}/`;
-      const response = await fetch(url);
+      const response = await apiFetch(url);
       if(response.ok){
         setTableNameStatus(statusOne.SUCCESS)
         const json = await response.json();
@@ -65,7 +72,7 @@ const CustomerDashboardWrapper = ({ children }) => {
 
     const getMenuCategoris = async () => {
       const url = `https://eathubbackend-1.onrender.com/restaurant_details/getMenuCategory/${restaurantId}`;
-      const response = await fetch(url);
+      const response = await apiFetch(url);
       if(response.ok){
         const json = await response.json();
         seMenuCategoris(json)
@@ -77,7 +84,7 @@ const CustomerDashboardWrapper = ({ children }) => {
     fetchMenuItems();
     fetchRestaurantDetails();
     fetchTableName();
-  }, [restaurantId]);
+  }, [restaurantId, tableId]);
 
   const setOneCartItems = (newone) => {
     const isAlreadyOne = cartItems.filter(item => item.id == newone.id);
@@ -147,8 +154,10 @@ const CustomerDashboardWrapper = ({ children }) => {
       menuCategoris,
       orderId,
       updateOrderId,
-      tableNameStatus
+      tableNameStatus,
+      tableAvailability
     }}>
+      {['reserved','unavailable'].includes(tableAvailability) && <p role="status" style={{padding:12,background:'#fff1bb',color:'#302700'}}>Table {tableAvailability}. Please ask staff before ordering.</p>}
       {children}
     </ComplexCustomer.Provider>
   );

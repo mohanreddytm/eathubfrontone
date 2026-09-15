@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { useState, useContext, useEffect } from 'react'
 import './index.css'
 import AllInOne from '../../../complexOne/index'
@@ -122,7 +123,7 @@ const Settings = () => {
       } else if (userId) {
         try {
           const url = `https://eathubbackend-1.onrender.com/restaurant/${userId}`
-          const response = await fetch(url)
+          const response = await apiFetch(url)
           if (response.ok) {
             const json = await response.json()
             const data = json[0]
@@ -157,7 +158,7 @@ const Settings = () => {
     const fetchPaymentSettings = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`https://eathubbackend-1.onrender.com/getPaymentSettings/${userId}`);
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/getPaymentSettings/${userId}`);
         if (response.ok) {
           const data = await response.json();
           if (data.settings) {
@@ -180,7 +181,7 @@ const Settings = () => {
     const fetchDisplaySettings = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`https://eathubbackend-1.onrender.com/getDisplaySettings/${userId}`);
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/getDisplaySettings/${userId}`);
         if (response.ok) {
           const data = await response.json();
           if (data.settings) {
@@ -229,7 +230,7 @@ const Settings = () => {
       setTheme(value)
       // Save theme to backend
       if (userId) {
-        fetch(`https://eathubbackend-1.onrender.com/updateDisplaySettings/${userId}`, {
+        apiFetch(`https://eathubbackend-1.onrender.com/updateDisplaySettings/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -252,7 +253,7 @@ const Settings = () => {
     setSaveStatus('saving')
     try {
       if (section === 'payment') {
-        const response = await fetch(`https://eathubbackend-1.onrender.com/updatePaymentSettings/${userId}`, {
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/updatePaymentSettings/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -263,7 +264,7 @@ const Settings = () => {
           throw new Error('Failed to save payment settings');
         }
       } else if (section === 'display') {
-        const response = await fetch(`https://eathubbackend-1.onrender.com/updateDisplaySettings/${userId}`, {
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/updateDisplaySettings/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

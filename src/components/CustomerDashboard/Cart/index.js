@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import { useContext, useState, useEffect } from 'react'
 import ComplexCustomer from '../../../complexOneForCustomer'
 import emptyone from '../../../images/empytplate.jpg'
@@ -12,7 +13,7 @@ import { addCustomerOrder } from '../../../utils/customerOrdersStorage';
 
 
 const Cart = () => {
-    const {restaurantName, menuItems,updateOrderId, tableId, restaurantId, setCurrentSection, updateCartItems, cartItems, reduceCartItem, tableName, clearCart} = useContext(ComplexCustomer);
+    const {tableAvailability,restaurantName, menuItems,updateOrderId, tableId, restaurantId, setCurrentSection, updateCartItems, cartItems, reduceCartItem, tableName, clearCart} = useContext(ComplexCustomer);
     const navigate = useNavigate();
 
     // console.log(cartItems)
@@ -78,7 +79,7 @@ const Cart = () => {
             body: JSON.stringify(orderOne)
         }
 
-        const response = await fetch(url, options)
+        const response = await apiFetch(url, options)
         if(response.ok){
             const responseData = await response.json();
             console.log("order added", responseData)
@@ -94,7 +95,7 @@ const Cart = () => {
             setIsOrderConfirm(true)
             navigate(`/customerDashboard/${tableId}/${restaurantId}/orderDetails`);
         }else{
-            console.log("order failed")
+            const error=await response.json();alert(error.error || 'Order could not be placed');
         }
     }
 
@@ -187,7 +188,7 @@ const Cart = () => {
                     <h1>{tableName}</h1>
                 </div>
 
-                <button onClick={onClickOrder}>Order</button>
+                <button disabled={['reserved','unavailable','loading'].includes(tableAvailability)} onClick={onClickOrder}>Order</button>
             </div>
             </>
              : emptyCartView()}

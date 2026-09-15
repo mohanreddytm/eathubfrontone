@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -20,7 +21,7 @@ const KotMainPage = () => {
     if (!orderId || !newStatus) return;
     setUpdatingOrderId(orderId);
     try {
-      const res = await fetch(`https://eathubbackend-1.onrender.com/updateOrderStatus/${orderId}`, {
+      const res = await apiFetch(`https://eathubbackend-1.onrender.com/updateOrderStatus/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

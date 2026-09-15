@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React from 'react'
 
 import { useState, useEffect, useContext } from 'react';
@@ -95,7 +96,7 @@ const MainPage = () => {
         }
 
         // Fetch orders for this table
-        const response = await fetch(`https://eathubbackend-1.onrender.com/getOrdersByTable/${tableId}`);
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/getOrdersByTable/${tableId}`);
         if (response.ok) {
           const data = await response.json();
           // Get all active orders for this table
@@ -178,7 +179,7 @@ const MainPage = () => {
         notes: 'Customer requested waiter assistance'
       }
 
-      const response = await fetch('https://eathubbackend-1.onrender.com/createWaiterRequest', {
+      const response = await apiFetch('https://eathubbackend-1.onrender.com/createWaiterRequest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

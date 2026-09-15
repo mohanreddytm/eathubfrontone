@@ -1,3 +1,4 @@
+import apiFetch from '../../utils/api';
 import React from 'react'
 import './index.css'
 
@@ -70,7 +71,7 @@ const RestaurantLogin = () => {
                 credentials: 'include'
             }
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             const jsonResponse = await response.json();
 
             console.log(jsonResponse);
@@ -112,7 +113,7 @@ const RestaurantLogin = () => {
                 credentials: 'include'
             }
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             const jsonResponse = await response.json();
 
             console.log(jsonResponse);
@@ -153,7 +154,7 @@ const RestaurantLogin = () => {
                 credentials: 'include'
             }
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             const jsonResponse = await response.json();
 
             console.log(jsonResponse);

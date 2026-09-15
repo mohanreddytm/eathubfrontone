@@ -1,3 +1,4 @@
+import apiFetch from '../../utils/api';
 import React from 'react'
 
 import { useState, useEffect  } from 'react';
@@ -159,7 +160,7 @@ const GetMoreInforRest = () => {
                 },
                 body: JSON.stringify(areas)
             }
-            const response = await fetch(url, options)
+            const response = await apiFetch(url, options)
             if(response.ok){
                 setCurrentStep("table");
                 setClickedSaveArea(true);
@@ -206,7 +207,7 @@ const GetMoreInforRest = () => {
         formData.append("file", file);
         formData.append("upload_preset", "my_preset"); // <-- your unsigned upload preset name
 
-        const res = await fetch(
+        const res = await apiFetch(
         "https://api.cloudinary.com/v1_1/dbrwqjsl3/image/upload",
         { method: "POST", body: formData }
         );
@@ -231,7 +232,7 @@ const GetMoreInforRest = () => {
                 body:JSON.stringify(tables)
             }
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             if(response.ok){
                 setCurrentStep("menu");
                 setClickedSaveTables(true)
@@ -260,7 +261,7 @@ const GetMoreInforRest = () => {
 
             console.log("menuCategories", menuCategories)
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             if(response.ok){
                 setCurrentStep("menuItems");
                 setClickedSaveMenuC(true)
@@ -560,7 +561,7 @@ const GetMoreInforRest = () => {
                 body:JSON.stringify(menuItems)
             }
 
-            const response = await fetch(url, options);
+            const response = await apiFetch(url, options);
             console.log('not here')
             if(response.ok){
                 setClickedSaveMenuT(true)

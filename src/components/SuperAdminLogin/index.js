@@ -1,3 +1,4 @@
+import apiFetch from '../../utils/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -29,7 +30,7 @@ const SuperAdminLogin = () => {
                 }
 
                 // Verify token with backend by calling protected endpoint
-                const verifyResponse = await fetch('https://eathubbackend-1.onrender.com/superAdmin/getAllRestaurants', {
+                const verifyResponse = await apiFetch('https://eathubbackend-1.onrender.com/superAdmin/getAllRestaurants', {
                     method: 'GET',
                     credentials: 'include', // Send HttpOnly cookie if it exists
                     headers: {
@@ -82,7 +83,7 @@ const SuperAdminLogin = () => {
             };
 
             try {
-                const response = await fetch(url, options);
+                const response = await apiFetch(url, options);
                 const jsonResponse = await response.json();
                 setIsLoading(false);
 

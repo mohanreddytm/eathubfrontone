@@ -1,3 +1,4 @@
+import apiFetch from '../../../utils/api';
 import React, { useState, useEffect, useContext } from 'react'
 import { FaDownload, FaPrint, FaPlus, FaTimes } from "react-icons/fa";
 import { MdQrCodeScanner } from "react-icons/md";
@@ -48,17 +49,14 @@ const Payment = () => {
     const fetchPayments = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
+        const response = await apiFetch(`https://eathubbackend-1.onrender.com/getPayments/${userId}`);
         if (response.ok) {
           const data = await response.json();
           const { start, end } = getTodayRange();
           
           // Filter today's payments
           const todayPayments = (data.payments || [])
-            .filter(payment => {
-              const paymentDate = new Date(payment.created_at);
-              return paymentDate >= start && paymentDate <= end;
-            })
+
             .map(payment => ({
               id: payment.id,
               orderId: payment.order_id,
@@ -67,7 +65,7 @@ const Payment = () => {
               tableName: payment.table_name || `T${payment.table_id?.toString().padStart(2, '0') || '00'}`,
               amount: parseFloat(payment.amount) || 0,
               paymentMethod: payment.payment_method || 'Cash',
-              paymentStatus: payment.payment_status || 'Pending',
+              paymentStatus: ({SUCCESS:'Paid',FAILED:'Failed',INITIATED:'Pending',PENDING_CONFIRMATION:'Pending'})[payment.payment_status] || payment.payment_status || 'Pending',
               transactionId: payment.transaction_id || `TXN${payment.id}`,
               date: new Date(payment.created_at).toLocaleDateString('en-IN'),
               time: new Date(payment.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
@@ -123,7 +121,7 @@ const Payment = () => {
 
   // Apply filters
   useEffect(() => {
-    let filtered = [...payments]
+    let filtered = [...payments].filter(p => p.createdAt.toDateString() === new Date().toDateString())
 
     // Filter by payment method
     if (selectedPaymentMethod !== 'all') {
@@ -148,9 +146,9 @@ const Payment = () => {
         case 'amount-low':
           return a.amount - b.amount
         case 'ordernum':
-          return b.orderNumber - a.orderNumber
+          return String(b.orderNumber).localeCompare(String(a.orderNumber),undefined,{numeric:true})
         case 'ordernum-low':
-          return a.orderNumber - b.orderNumber
+          return String(a.orderNumber).localeCompare(String(b.orderNumber),undefined,{numeric:true})
         case 'date':
         default:
           return b.createdAt - a.createdAt
@@ -168,30 +166,17 @@ const Payment = () => {
 
   // Handle add payment
   const handleAddPayment = async () => {
-    if (!addPaymentForm.orderId || !addPaymentForm.amount) {
+    if (!addPaymentForm.orderId) {
       alert('Please fill in all required fields')
       return
     }
 
     try {
-      // Here you would make an API call to add payment
-      // For now, we'll simulate it
-      const newPayment = {
-        id: Date.now(),
-        orderId: addPaymentForm.orderId,
-        orderNumber: parseInt(addPaymentForm.orderId),
-        tableId: null,
-        tableName: 'N/A',
-        amount: parseFloat(addPaymentForm.amount),
-        paymentMethod: addPaymentForm.paymentMethod,
-        paymentStatus: 'Paid',
-        transactionId: addPaymentForm.transactionId || `TXN${Date.now()}`,
-        date: new Date().toLocaleDateString('en-IN'),
-        time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-        createdAt: new Date()
-      }
-
-      setPayments(prev => [newPayment, ...prev])
+      const response = await apiFetch('https://eathubbackend-1.onrender.com/createPayment', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({restaurant_id:userId,order_id:addPaymentForm.orderId,payment_method:addPaymentForm.paymentMethod,payment_status:'Pending',transaction_id:addPaymentForm.transactionId,notes:addPaymentForm.notes})
+      });
+      const result=await response.json(); if(!response.ok)throw new Error(result.error || 'Unable to save payment');
       setShowAddPaymentModal(false)
       setAddPaymentForm({
         orderId: '',
@@ -200,10 +185,10 @@ const Payment = () => {
         transactionId: '',
         notes: ''
       })
-      alert('Payment added successfully!')
+      alert('Payment saved. Confirm receipt from the dashboard pending payments list.')
     } catch (error) {
       console.error('Error adding payment:', error)
-      alert('Failed to add payment. Please try again.')
+      alert(error.message)
     }
   }
 
@@ -465,15 +450,8 @@ const Payment = () => {
                 />
               </div>
               <div className='payment-form-group'>
-                <label>Amount (₹) *</label>
-                <input
-                  type="number"
-                  value={addPaymentForm.amount}
-                  onChange={(e) => setAddPaymentForm(prev => ({ ...prev, amount: e.target.value }))}
-                  placeholder="Enter amount"
-                  step="0.01"
-                />
-              </div>
+                <p>The amount is calculated from the saved order bill.</p>
+</div>
               <div className='payment-form-group'>
                 <label>Payment Method *</label>
                 <select
