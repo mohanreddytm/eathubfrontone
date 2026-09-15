@@ -1,9 +1,13 @@
 import Cookies from "js-cookie";
 export const API_BASE_URL = (
-  process.env.REACT_APP_API_BASE_URL || "https://eathubbackend-1.onrender.com"
+  process.env.REACT_APP_API_BASE_URL ||
+  (["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? "http://localhost:8000"
+    : "https://eathubbackend-1.onrender.com")
 ).replace(/\/$/, "");
 const origins = new Set([
   "https://eathubbackend-1.onrender.com",
+  "http://localhost:8000",
   new URL(API_BASE_URL).origin,
 ]);
 const sessions = new Map();
@@ -58,10 +62,18 @@ export default async function apiFetch(input, init = {}) {
     ? await guestToken(customer[1], customer[2])
     : Cookies.get(key);
   if (token) headers.set("Authorization", `Bearer ${token}`);
-  const res = await window.fetch(
-    `${API_BASE_URL}${url.pathname}${url.search}`,
-    { ...init, headers },
-  );
+  let res;
+  try {
+    res = await window.fetch(`${API_BASE_URL}${url.pathname}${url.search}`, {
+      ...init,
+      headers,
+    });
+  } catch (error) {
+    if (error.name === "AbortError") throw error;
+    throw new Error(
+      "Cannot connect to the server. Check your connection and try again.",
+    );
+  }
   if (
     res.status === 401 &&
     !customer &&
@@ -72,4 +84,25 @@ export default async function apiFetch(input, init = {}) {
       window.location.assign(key === "sa_user" ? "/superAdminLogin" : "/login");
   }
   return res;
+}
+
+export async function request(path, method = "GET", body, options = {}) {
+  const res = await apiFetch(path, {
+    ...options,
+    method,
+    headers: { "Content-Type": "application/json", ...options.headers },
+    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+  });
+  const text = await res.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = { message: text };
+  }
+  if (!res.ok)
+    throw new Error(
+      data.error || `Request failed (${res.status}). Please try again.`,
+    );
+  return data;
 }

@@ -1,11 +1,12 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import OrderActions from "./OrderActions";
-import apiFetch from "../../../utils/api";
+import apiFetch, { request } from "../../../utils/api";
 jest.mock("../../../utils/api", () => ({
   __esModule: true,
   default: jest.fn(),
   API_BASE_URL: "http://localhost:8000",
+  request: jest.fn(async () => ({ enabled: false })),
 }));
 const bill = {
   id: "o1",
@@ -23,6 +24,7 @@ const bill = {
   restaurant: { restaurentname: "Test", branchaddress: "Test Street" },
 };
 beforeEach(() => {
+  request.mockResolvedValue({ enabled: false });
   apiFetch.mockReset();
   apiFetch.mockImplementation(async () => ({
     ok: true,
@@ -66,7 +68,9 @@ test("payment confirmation requires explicit verification of receipt", async () 
   expect(screen.getByText("Confirm payment")).toBeDisabled();
   fireEvent.click(screen.getByRole("checkbox"));
   fireEvent.click(screen.getByText("Confirm payment"));
-  await screen.findByText("Payment confirmed and order completed.");
+  await screen.findByText(
+    "Payment confirmed. Kitchen progress is tracked separately.",
+  );
 });
 test("a failed mutation shows the server error rather than success", async () => {
   render(<OrderActions orderId="o1" />);

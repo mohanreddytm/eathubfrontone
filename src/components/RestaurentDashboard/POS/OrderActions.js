@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiFetch, { API_BASE_URL } from "../../../utils/api";
 import "./order-actions.css";
+import Checkout from "../../../workspace/Checkout";
 export default function OrderActions({ orderId, menuItems = [], onChanged }) {
   const [bill, setBill] = useState(null),
     [error, setError] = useState(""),
@@ -35,11 +36,16 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
     let active = true;
     request(`/generateBill/${orderId}`)
       .then((d) => {
-        if (active) setBill(d.bill);
+        if (active) {
+          setBill(d.bill);
+          setError("");
+        }
       })
       .catch((e) => {
         if (active) setError(e.message);
       });
+    setBill(null);
+    setError("");
     setPanel("");
     setPayment(null);
     setNotice("");
@@ -93,7 +99,7 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
       setPayment(d.payment);
       setNotice(
         ["Paid", "SUCCESS"].includes(d.payment.payment_status)
-          ? "Payment confirmed and order completed."
+          ? "Payment confirmed. Kitchen progress is tracked separately."
           : `A ${d.payment.payment_method} request is already pending. Verify its receipt, then confirm below.`,
       );
       setReceived(false);
@@ -103,14 +109,19 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
   const items =
       typeof bill.items === "string" ? JSON.parse(bill.items) : bill.items,
     settled = ["Completed", "Cancelled"].includes(bill.status),
-    next = { Pending: "Confirmed", Confirmed: "Preparing", Preparing: "Ready" }[
-      bill.status
-    ];
+    paid = ["Paid", "SUCCESS"].includes(bill.payment_status),
+    next = {
+      Pending: "Confirmed",
+      Confirmed: "Preparing",
+      Preparing: "Ready",
+      Ready: paid ? "Completed" : null,
+    }[bill.status];
   return (
     <section className="order-actions">
       <h2>Order #{bill.order_number}</h2>
       <p>
-        {bill.table_name || "Walk-in"} · {bill.status}
+        {bill.table_name || "Walk-in"} · {bill.status} ·{" "}
+        {paid ? "Paid" : "Unpaid"}
       </p>
       <table>
         <thead>
@@ -124,7 +135,12 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
         <tbody>
           {items.map((i, n) => (
             <tr key={`${i.id}-${n}`}>
-              <td>{i.cart_item_name || i.item_name}</td>
+              <td>
+                {i.name ||
+                  i.cart_item_name ||
+                  i.item_name ||
+                  "Item no longer on menu"}
+              </td>
               <td>{i.quantity}</td>
               <td>₹{Number(i.price ?? i.cart_item_price).toFixed(2)}</td>
               <td>
@@ -148,27 +164,48 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
             disabled={busy}
             onClick={() => mutate(`/updateStatus/${orderId}/${next}`, "PUT")}
           >
-            Move to {next}
+            {next === "Completed"
+              ? "Mark served & complete"
+              : `Move to ${next}`}
           </button>
         )}
-        <button disabled={settled} onClick={() => show("kot")}>
+        <button disabled={settled || paid || busy} onClick={() => show("kot")}>
           New KOT
         </button>
-        <button disabled={settled} onClick={() => show("discount")}>
+        <button
+          disabled={settled || paid || busy}
+          onClick={() => show("discount")}
+        >
           Add Discount
         </button>
-        <button disabled={settled} onClick={() => show("tax")}>
+        <button disabled={settled || paid || busy} onClick={() => show("tax")}>
           Tax Mode
         </button>
         <button onClick={() => show("bill")}>BILL</button>
         <button onClick={() => show("print")}>BILL &amp; PRINT</button>
-        <button disabled={settled} onClick={() => show("payment")}>
+        <button
+          disabled={settled || paid || busy}
+          onClick={() => show("payment")}
+        >
           BILL &amp; PAYMENT
         </button>
-        <button disabled={settled} onClick={() => show("cancel")}>
+        <button
+          disabled={settled || paid || busy}
+          onClick={() => show("cancel")}
+        >
           Cancel Order
         </button>
       </div>
+      {!settled && !paid && (
+        <Checkout
+          restaurantId={bill.restaurant_id}
+          orderId={orderId}
+          onPaid={async () => {
+            await refresh();
+            onChanged?.();
+          }}
+        />
+      )}
       {panel && (
         <div className="order-action-panel">
           <button onClick={() => setPanel("")}>Close</button>
@@ -287,7 +324,11 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
               </p>
               {items.map((i, n) => (
                 <p key={n}>
-                  {i.cart_item_name || i.item_name} × {i.quantity} — ₹
+                  {i.name ||
+                    i.cart_item_name ||
+                    i.item_name ||
+                    "Item no longer on menu"}{" "}
+                  × {i.quantity} — ₹
                   {(Number(i.price ?? i.cart_item_price) * i.quantity).toFixed(
                     2,
                   )}

@@ -2,4 +2,11 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
+const { TextEncoder, TextDecoder } = require("util");
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+Object.defineProperty(global, "crypto", {
+  value: require("crypto").webcrypto,
+  configurable: true,
+});
