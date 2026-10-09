@@ -1,0 +1,167 @@
+.eh-refunds {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--eh-line);
+  display: grid;
+  gap: 14px;
+  overflow-wrap: anywhere;
+}
+.eh-refunds .eh-refund-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.eh-app .eh-refunds h3 {
+  font-size: 17px;
+  margin: 0;
+}
+.eh-refunds p,
+.eh-refunds small {
+  font-size: 12px;
+}
+.eh-refund-totals {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: var(--eh-panel);
+  padding: 14px;
+  border-radius: 10px;
+}
+.eh-refund-totals span {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+}
+.eh-refund-totals strong {
+  font-size: 18px;
+}
+.eh-refund-test {
+  color: var(--eh-muted);
+}
+.eh-refund-history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.eh-refund-history li {
+  padding: 14px;
+  border: 1px solid var(--eh-line);
+  border-radius: 10px;
+  display: grid;
+  gap: 8px;
+}
+.eh-refund-history button {
+  justify-self: start;
+}
+.eh-refund-form {
+  display: grid;
+  gap: 16px;
+}
+.eh-refund-form fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.eh-refund-form legend {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.eh-modal .eh-refund-radio {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 9px;
+}
+.eh-modal .eh-refund-radio input {
+  width: 17px;
+  height: 17px;
+  min-height: 17px;
+  padding: 0;
+  flex: 0 0 auto;
+  margin-top: 4px;
+  accent-color: var(--eh-green);
+}
+.eh-refund-items {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--eh-line);
+  border-radius: 10px;
+}
+.eh-modal .eh-refund-items label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.eh-refund-items small {
+  display: block;
+  font-weight: 400;
+}
+.eh-refund-items select {
+  width: 74px;
+  height: 42px;
+  flex: 0 0 74px;
+}
+.eh-refund-review {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+  background: var(--eh-panel);
+  border-radius: 10px;
+}
+.eh-refund-review strong {
+  font-size: 21px;
+  color: var(--eh-green);
+}
+.eh-app .order-actions .eh-modal .eh-refund-form .eh-button {
+  min-height: 44px;
+  background: #28654f;
+  border-color: #28654f;
+  color: #fff;
+  font-size: 13px;
+}
+.eh-app .order-actions .eh-modal .eh-refund-form .eh-secondary,
+.eh-app .order-actions .eh-modal:has(.eh-refund-form) .eh-icon-button {
+  background: var(--eh-panel);
+  border-color: var(--eh-line);
+  color: var(--eh-text);
+}
+.eh-status-refunded,
+.eh-status-refund-processed,
+.eh-status-partially-refunded {
+  background: var(--eh-mint);
+  color: var(--eh-green);
+}
+.eh-status-refund-failed {
+  color: var(--eh-red);
+}
+[data-theme="dark"] .eh-modal:has(.eh-refund-form) {
+  --eh-text: #edf3ed;
+  --eh-line: #35443a;
+  --eh-surface: #202b24;
+  --eh-panel: #263129;
+  --eh-green: #75b899;
+  color: var(--eh-text);
+  background: var(--eh-surface);
+  border-color: var(--eh-line);
+}
+@media (max-width: 480px) {
+  .eh-refund-form .eh-dialog-actions {
+    flex-direction: column-reverse;
+  }
+  .eh-refund-form .eh-dialog-actions button {
+    width: 100%;
+  }
+}

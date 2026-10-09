@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import apiFetch, { API_BASE_URL } from "../../../utils/api";
 import "./order-actions.css";
 import Checkout from "../../../workspace/Checkout";
-export default function OrderActions({ orderId, menuItems = [], onChanged }) {
+import Refunds from "../../../workspace/Refunds";
+export default function OrderActions({
+  orderId,
+  menuItems = [],
+  onChanged,
+  role,
+}) {
   const [bill, setBill] = useState(null),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
@@ -108,7 +114,7 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
   if (!bill) return <p role="status">{error || "Loading order…"}</p>;
   const items =
       typeof bill.items === "string" ? JSON.parse(bill.items) : bill.items,
-    settled = ["Completed", "Cancelled"].includes(bill.status),
+    settled = ["Completed", "Cancelled", "Refunded"].includes(bill.status),
     paid = ["Paid", "SUCCESS"].includes(bill.payment_status),
     next = {
       Pending: "Confirmed",
@@ -203,6 +209,17 @@ export default function OrderActions({ orderId, menuItems = [], onChanged }) {
           onPaid={async () => {
             await refresh();
             onChanged?.();
+          }}
+        />
+      )}
+      {paid && ["Completed", "Refunded"].includes(bill.status) && role && (
+        <Refunds
+          key={orderId}
+          orderId={orderId}
+          admin={role === "admin"}
+          onChanged={async () => {
+            await refresh();
+            await onChanged?.();
           }}
         />
       )}

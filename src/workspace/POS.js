@@ -283,6 +283,7 @@ function POSContent({ w, orderId, params, navigate, draftKey }) {
               <OrderActions
                 key={`${orderId}-${revision}`}
                 orderId={orderId}
+                role={w.role}
                 menuItems={w.menu}
                 onChanged={w.refresh}
               />
