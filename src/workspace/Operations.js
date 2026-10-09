@@ -237,6 +237,14 @@ export function OrderTable({ orders }) {
               </td>
               <td>
                 <Status>{o.status}</Status>
+                {o.refund_status &&
+                  !["None", "Refunded"].includes(o.refund_status) && (
+                    <small>
+                      {o.refund_status === "Pending"
+                        ? "Refund pending"
+                        : o.refund_status}
+                    </small>
+                  )}
               </td>
               <td className="eh-amount">{money(total(o))}</td>
               <td>{date(o.created_at)}</td>
@@ -296,6 +304,7 @@ export function OrdersPage() {
             "Preparing",
             "Ready",
             "Completed",
+            "Refunded",
             "Cancelled",
           ].map((s) => (
             <button
@@ -618,6 +627,33 @@ export function PaymentsPage() {
           <small>All recorded confirmed receipts</small>
         </article>
         <article className="eh-stat">
+          <div>Refunded</div>
+          <strong>
+            {money(
+              w.payments.reduce(
+                (s, p) => s + Number(p.refunded_amount || 0),
+                0,
+              ),
+            )}
+          </strong>
+          <small>Processed refunds only</small>
+        </article>
+        <article className="eh-stat">
+          <div>Net collected</div>
+          <strong>
+            {money(
+              w.payments
+                .filter(paid)
+                .reduce(
+                  (s, p) =>
+                    s + Number(p.amount) - Number(p.refunded_amount || 0),
+                  0,
+                ),
+            )}
+          </strong>
+          <small>Confirmed receipts less processed refunds</small>
+        </article>
+        <article className="eh-stat">
           <div>Awaiting confirmation</div>
           <strong>
             {
@@ -672,7 +708,12 @@ export function PaymentsPage() {
                     <small>{p.table_name || "Walk-in"}</small>
                   </td>
                   <td>{p.payment_method}</td>
-                  <td className="eh-amount">{money(p.amount)}</td>
+                  <td className="eh-amount">
+                    {money(p.amount)}
+                    {Number(p.refunded_amount) > 0 && (
+                      <small>Refunded {money(p.refunded_amount)}</small>
+                    )}
+                  </td>
                   <td>
                     <Status>{p.payment_status}</Status>
                   </td>

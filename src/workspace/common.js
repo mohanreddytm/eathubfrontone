@@ -37,7 +37,8 @@ export const date = (value) =>
 export const itemName = (i) =>
   i.name || i.item_name || i.cart_item_name || "Item no longer on menu";
 export const available = (i) => /^(yes|true|available)$/i.test(i.availability);
-export const terminal = (o) => ["Completed", "Cancelled"].includes(o.status);
+export const terminal = (o) =>
+  ["Completed", "Cancelled", "Refunded"].includes(o.status);
 export function Status({ children }) {
   return (
     <span

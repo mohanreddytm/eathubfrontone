@@ -20,6 +20,7 @@ import {
   LuArrowRight,
 } from "react-icons/lu";
 import { request } from "../utils/api";
+import Refunds from "./Refunds";
 import {
   Search,
   Status,
@@ -541,6 +542,14 @@ function GuestOrders({ orders, base }) {
             <div className="eh-card-heading">
               <h2>#{o.order_number}</h2>
               <Status>{o.status}</Status>
+              {o.refund_status &&
+                !["None", "Refunded"].includes(o.refund_status) && (
+                  <Status>
+                    {o.refund_status === "Pending"
+                      ? "Refund pending"
+                      : o.refund_status}
+                  </Status>
+                )}
             </div>
             <p>{list(o.items).map(itemName).join(" · ")}</p>
             <div>
@@ -646,6 +655,7 @@ function GuestOrder({ base, refresh }) {
                   Preparing: 1,
                   Ready: 2,
                   Completed: 3,
+                  Refunded: 3,
                 }[bill.status] ?? -1)
                   ? "active"
                   : ""
@@ -689,7 +699,11 @@ function GuestOrder({ base, refresh }) {
         </div>
         {error && <Notice error>{error}</Notice>}
         {notice && <Notice>{notice}</Notice>}
-        {bill.status === "Completed" ? (
+        {bill.status === "Refunded" ? (
+          <Notice>
+            This order has been fully refunded. See the refund details below.
+          </Notice>
+        ) : bill.status === "Completed" ? (
           <Notice>Payment received. Thank you for dining with us.</Notice>
         ) : bill.status === "Cancelled" ? (
           <Notice>
@@ -726,7 +740,7 @@ function GuestOrder({ base, refresh }) {
             </button>
           </>
         )}
-        {!["Completed", "Cancelled"].includes(bill.status) && (
+        {!["Completed", "Cancelled", "Refunded"].includes(bill.status) && (
           <Checkout
             restaurantId={bill.restaurant_id}
             orderId={orderId}
@@ -737,6 +751,10 @@ function GuestOrder({ base, refresh }) {
             }}
           />
         )}
+        {["Completed", "Refunded"].includes(bill.status) &&
+          ["Paid", "SUCCESS"].includes(bill.payment_status) && (
+            <Refunds key={orderId} orderId={orderId} />
+          )}
       </section>
     </div>
   );

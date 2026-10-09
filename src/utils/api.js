@@ -101,8 +101,11 @@ export async function request(path, method = "GET", body, options = {}) {
     data = { message: text };
   }
   if (!res.ok)
-    throw new Error(
-      data.error || `Request failed (${res.status}). Please try again.`,
+    throw Object.assign(
+      new Error(
+        data.error || `Request failed (${res.status}). Please try again.`,
+      ),
+      { status: res.status },
     );
   return data;
 }
